@@ -9,6 +9,7 @@ import collections
 import math
 import tdrstyle
 import array
+import numpy as np
 
 ### Tile Sizes ###
 HoleSizes  = [6.35, 9.5, 15]
@@ -32,17 +33,26 @@ aBlackTapeSim     = array.array('d', BlackTapeSim)
 aBlackTapeSim_Err = array.array('d', BlackTapeSim_Err)
 
 ### Data Results ###
-WhiteSilkSScreen_1 = [36.26, 34.05, 33.38]
-aWhiteSilkScreen_1 = array.array('d', WhiteSilkSScreen_1)
+Error = 0.0176
+WhiteSilkScreen_1     = [36.26, 34.05, 33.38]
+WhiteSilkScreenErr_1  = Error*np.array(WhiteSilkScreen_1)
+aWhiteSilkScreen_1     = array.array('d', WhiteSilkScreen_1)
+aWhiteSilkScreenErr_1 = array.array('d', WhiteSilkScreenErr_1)
 
-BlackTape_1  = [35.99, 30.56, 27.62]
-aBlackTape_1 = array.array('d', BlackTape_1)
+BlackTape_1     = [35.99, 30.56, 27.62]
+BlackTapeErr_1  = Error*np.array(BlackTape_1)
+aBlackTape_1    = array.array('d', BlackTape_1)
+aBlackTapeErr_1 = array.array('d', BlackTapeErr_1)
 
-WhiteSilkSScreen_2 = [35.52, 34.37, 33.23]
-aWhiteSilkScreen_2 = array.array('d', WhiteSilkSScreen_2)
+WhiteSilkScreen_2     = [35.52, 34.37, 33.23]
+WhiteSilkScreenErr_2  = Error*np.array(WhiteSilkScreen_2)
+aWhiteSilkScreen_2    = array.array('d', WhiteSilkScreen_2)
+aWhiteSilkScreenErr_2 = array.array('d', WhiteSilkScreenErr_2)
 
-BlackTape_2  = [30.13, 29.97, 26.36]
-aBlackTape_2 = array.array('d', BlackTape_2)
+BlackTape_2     = [30.13, 29.97, 26.36]
+BlackTapeErr_2  = Error*np.array(BlackTape_2)
+aBlackTape_2    = array.array('d', BlackTape_2)
+aBlackTapeErr_2 = array.array('d', BlackTapeErr_2)
 
 
 ############################################
@@ -124,16 +134,16 @@ elif Samples == "2":
 if Samples == "1":
     grSimulation_White = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aWhiteSilkScreenSim,aHoleSizes_Err,aWhiteSilkScreenSim_Err)
     grMax = r.TMath.MaxElement(grSimulation_White.GetN(),grSimulation_White.GetY())
-    grData_White = r.TGraph(len(aHoleSizes), aHoleSizes, aWhiteSilkScreen_1)
+    grData_White = r.TGraphErrors(len(aHoleSizes), aHoleSizes, aWhiteSilkScreen_1, aHoleSizes_Err, aWhiteSilkScreenErr_1)
     grSimulation_Black = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aBlackTapeSim,aHoleSizes_Err,aBlackTapeSim_Err)
-    grData_Black = r.TGraph(len(aHoleSizes), aHoleSizes, aBlackTape_1)
+    grData_Black = r.TGraphErrors(len(aHoleSizes), aHoleSizes, aBlackTape_1, aHoleSizes_Err, aBlackTapeErr_1)
 
 elif Samples == "2":
     grSimulation_White = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aWhiteSilkScreenSim,aHoleSizes_Err,aWhiteSilkScreenSim_Err)
     grMax = r.TMath.MaxElement(grSimulation_White.GetN(),grSimulation_White.GetY())
-    grData_White = r.TGraph(len(aHoleSizes), aHoleSizes, aWhiteSilkScreen_2)
+    grData_White = r.TGraphErrors(len(aHoleSizes), aHoleSizes, aWhiteSilkScreen_2, aHoleSizes_Err, aWhiteSilkScreenErr_2)
     grSimulation_Black = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aBlackTapeSim,aHoleSizes_Err,aBlackTapeSim_Err)
-    grData_Black = r.TGraph(len(aHoleSizes), aHoleSizes, aBlackTape_2)
+    grData_Black = r.TGraphErrors(len(aHoleSizes), aHoleSizes, aBlackTape_2, aHoleSizes_Err, aBlackTapeErr_1)
 
 
 
@@ -181,9 +191,9 @@ legend.SetTextSize(0.035)
 legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation_White, "Simulation White Silkscreen", "PE")
-legend.AddEntry(grData_White, "Data White Silkscreen", "P")
+legend.AddEntry(grData_White, "Data White Silkscreen", "PE")
 legend.AddEntry(grSimulation_Black, "Simulation Black Tape", "PE")
-legend.AddEntry(grData_Black, "Data Black Tape", "P")
+legend.AddEntry(grData_Black, "Data Black Tape", "PE")
 
 legend.Draw("same")
 
