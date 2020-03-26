@@ -139,9 +139,9 @@ aDataVsArea_EJ3ESR  = array.array('d', DataVsArea_EJ3ESR)
 aDataVsArea_NIU3ESR = array.array('d', DataVsArea_NIU3ESR)
 
 aDataVsArea_TyvekErr  = array.array('d', DataVsArea_TyvekErr)
-DataVsArea_3p8ESRErr  = array.array('d', DataVsArea_3p8ESRErr)
-DataVsArea_EJ3ESRErr  = array.array('d', DataVsArea_EJ3ESRErr)
-DataVsArea_NIU3ESRErr = array.array('d', DataVsArea_NIU3ESRErr)
+aDataVsArea_3p8ESRErr  = array.array('d', DataVsArea_3p8ESRErr)
+aDataVsArea_EJ3ESRErr  = array.array('d', DataVsArea_EJ3ESRErr)
+aDataVsArea_NIU3ESRErr = array.array('d', DataVsArea_NIU3ESRErr)
 
 
 ############################################
