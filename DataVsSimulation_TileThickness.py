@@ -9,6 +9,7 @@ import collections
 import math
 import tdrstyle
 import array
+import numpy as np
 
 ### Returns the data/sim ratio and the data error/sim ratio ###
 def getRatio(dataGraph, simGraph):
@@ -20,19 +21,19 @@ def getRatio(dataGraph, simGraph):
     if dataGraph.GetN() == simGraph.GetN():
 	for i in range(0,dataGraph.GetN()):
             ratio.append(dataGraph.GetY()[i]/simGraph.GetY()[i])
-            ratioErr.append(dataGraph.GetY()[i]/simGraph.GetEY()[i])
+            ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetE()[i])
             zero.append(0.0)
     else:
         for i in range(0,dataGraph.GetN()):
 	    if dataGraph.GetX()[i] == simGraph.GetX()[i]:
                 ratio.append(dataGraph.GetY()[i]/simGraph.GetY()[i])
-                ratioErr.append(dataGraph.GetY()[i]/simGraph.GetEY()[i])
+                ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetY()[i])
                 zero.append(0.0)
 	    else:
 		if dataGraph.GetX()[i] == dataGraph.GetX()[i-1]:
 		    doubleMeasurements = doubleMeasurements + 1
 		ratio.append(dataGraph.GetY()[i]/simGraph.GetY()[i-doubleMeasurements])
-                ratioErr.append(dataGraph.GetY()[i]/simGraph.GetEY()[i-doubleMeasurements])
+                ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetY()[i-doubleMeasurements])
                 zero.append(0.0)
 
 
@@ -120,6 +121,7 @@ aSimVsWidth_ESR5x5       = array.array('d', SimVsWidth_ESR5x5)
 aSimVsWidth_ESR5x5_Err   = array.array('d', SimVsWidth_ESR5x5_Err)
 
 ### Data Results ###
+Error = 0.064344
 TileWidths_ESR4x4     = [3.8, 7.6, 7.6, 11.4]
 TileWidths_ESR4x4_all = [3.8, 7.6, 7.6, 7.6, 11.4, 11.4]
 TileWidths_ESR5x5     = [3.8, 7.6, 7.6, 11.4, 11.4]
@@ -132,15 +134,30 @@ DataVsWidth_ESR4x4_all   = [15.39, 13.50, 20.67, 22., 15.43, 32.37]
 DataVsWidth_Tyvek5x5     = [4.38, 5.57, 5.37]
 DataVsWidth_ESR5x5       = [7.47, 14.56, 15.01, 16.95, 16.82]
 
+DataVsWidth_Tyvek3x3Err  = Error*np.array(DataVsWidth_Tyvek3x3)
+DataVsWidth_ESR3x3Err    = Error*np.array(DataVsWidth_ESR3x3)
+DataVsWidth_Tyvek4x4Err  = Error*np.array(DataVsWidth_Tyvek4x4)
+DataVsWidth_ESR4x4Err    = Error*np.array(DataVsWidth_ESR4x4)
+DataVsWidth_Tyvek5x5Err  = Error*np.array(DataVsWidth_Tyvek5x5)
+DataVsWidth_ESR5x5Err    = Error*np.array(DataVsWidth_ESR5x5)
+
 aTileWidths_ESR4x4  = array.array('d', TileWidths_ESR4x4)
 aTileWidths_ESR5x5  = array.array('d', TileWidths_ESR5x5)
 
-aDataVsWidth_Tyvek3x3   = array.array('d', DataVsWidth_Tyvek3x3)
-aDataVsWidth_ESR3x3  = array.array('d', DataVsWidth_ESR3x3)
-aDataVsWidth_Tyvek4x4  = array.array('d', DataVsWidth_Tyvek4x4)
-aDataVsWidth_ESR4x4 = array.array('d', DataVsWidth_ESR4x4)
+aDataVsWidth_Tyvek3x3 = array.array('d', DataVsWidth_Tyvek3x3)
+aDataVsWidth_ESR3x3   = array.array('d', DataVsWidth_ESR3x3)
+aDataVsWidth_Tyvek4x4 = array.array('d', DataVsWidth_Tyvek4x4)
+aDataVsWidth_ESR4x4   = array.array('d', DataVsWidth_ESR4x4)
 aDataVsWidth_Tyvek5x5 = array.array('d', DataVsWidth_Tyvek5x5)
-aDataVsWidth_ESR5x5 = array.array('d', DataVsWidth_ESR5x5)
+aDataVsWidth_ESR5x5   = array.array('d', DataVsWidth_ESR5x5)
+
+aDataVsWidth_Tyvek3x3Err = array.array('d', DataVsWidth_Tyvek3x3Err)
+aDataVsWidth_ESR3x3Err   = array.array('d', DataVsWidth_ESR3x3Err)
+aDataVsWidth_Tyvek4x4Err = array.array('d', DataVsWidth_Tyvek4x4Err)
+aDataVsWidth_ESR4x4Err   = array.array('d', DataVsWidth_ESR4x4Err)
+aDataVsWidth_Tyvek5x5Err = array.array('d', DataVsWidth_Tyvek5x5Err)
+aDataVsWidth_ESR5x5Err   = array.array('d', DataVsWidth_ESR5x5Err)
+
 
 
 ############################################
@@ -249,26 +266,26 @@ elif Samples == "Tyvek5x5":
 if Samples == "Tyvek3x3":
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek3x3,aTileWidths_Err,aSimVsWidth_Tyvek3x3_Err)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek3x3)
+    grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek3x3, aTileWidths_Err, aDataVsWidth_Tyvek3x3Err)
 elif Samples == "ESR3x3":
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR3x3,aTileWidths_Err,aSimVsWidth_ESR3x3_Err)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aTileWidths), aTileWidths, aDataVsWidth_ESR3x3)
+    grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_ESR3x3,  aTileWidths_Err, aDataVsWidth_ESR3x3Err)
 elif Samples == "Tyvek4x4":
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek4x4,aTileWidths_Err,aSimVsWidth_Tyvek4x4_Err)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek4x4)
+    grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek4x4, aTileWidths_Err, aDataVsWidth_Tyvek4x4Err)
 elif Samples == "ESR4x4":
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR4x4,aTileWidths_Err,aSimVsWidth_ESR4x4_Err)
-    grData = r.TGraph(len(aTileWidths_ESR4x4), aTileWidths_ESR4x4, aDataVsWidth_ESR4x4)
+    grData = r.TGraphErrors(len(aTileWidths_ESR4x4), aTileWidths_ESR4x4, aDataVsWidth_ESR4x4, aTileWidths_Err, aDataVsWidth_ESR4x4Err)
     grMax = r.TMath.MaxElement(grData.GetN(),grData.GetY())
 elif Samples == "Tyvek5x5":
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek5x5,aTileWidths_Err,aSimVsWidth_Tyvek5x5_Err)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek5x5)
+    grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek5x5, aTileWidths_Err, aDataVsWidth_Tyvek5x5Err)
 elif Samples == "ESR5x5":
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR5x5,aTileWidths_Err,aSimVsWidth_ESR5x5_Err)
-    grData = r.TGraph(len(aTileWidths_ESR5x5), aTileWidths_ESR5x5, aDataVsWidth_ESR5x5)
+    grData = r.TGraphErrors(len(aTileWidths_ESR5x5), aTileWidths_ESR5x5, aDataVsWidth_ESR5x5, aTileWidths_Err, aDataVsWidth_ESR5x5Err)
     grMax = r.TMath.MaxElement(grData.GetN(),grData.GetY())
 
 
@@ -344,7 +361,7 @@ legend.SetTextSize(0.065)
 legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation, "Simulation", "PE")
-legend.AddEntry(grData, "Data", "P")
+legend.AddEntry(grData, "Data", "PE")
 
 legend.Draw("same")
 
@@ -357,7 +374,7 @@ aRatio    = array.array('d', Ratio)
 aRatioErr = array.array('d', RatioErr)
 aZero     = array.array('d', Zero)
 
-grRatio = r.TGraph(len(Ratio),grData.GetX(),aRatio)
+grRatio = r.TGraphErrors(len(Ratio),grData.GetX(),aRatio,aZero,aRatioErr)
 MaxRatio = r.TMath.MaxElement(grRatio.GetN(),grRatio.GetY())
 MinRatio = r.TMath.MinElement(grRatio.GetN(),grRatio.GetY())
 

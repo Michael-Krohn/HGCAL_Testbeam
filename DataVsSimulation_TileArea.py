@@ -9,7 +9,7 @@ import collections
 import math
 import tdrstyle
 import array
-
+import numpy as np
 
 ### Returns the data/sim ratio and the data error/sim ratio ###
 def getRatio(dataGraph, simGraph):
@@ -19,7 +19,7 @@ def getRatio(dataGraph, simGraph):
     zero     = []
     for i in range(0,dataGraph.GetN()):
 	ratio.append(dataGraph.GetY()[i]/simGraph.GetY()[i])
-	ratioErr.append(dataGraph.GetY()[i]/simGraph.GetEY()[i])
+	ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetY()[i])
 	zero.append(0.0)
 
 
@@ -112,6 +112,7 @@ aSimVsArea_3ESR_NIU      = array.array('d', SimVsArea_3ESR_NIU)
 aSimVsArea_3ESRErr_NIU   = array.array('d', SimVsArea_3ESRErr_NIU)
 
 ### Data Results ###
+Error = 0.0176
 AreaSizes_Tyvek   = [9, 16, 25]
 AreaSizes_3p8ESR  = [9, 16, 25]
 AreaSizes_EJ3ESR  = [2.3*2.3, 9, 3.4*3.4, 5.5*5.5]
@@ -121,6 +122,11 @@ DataVsArea_Tyvek   = [7.69, 5.65, 4.38]
 DataVsArea_3p8ESR  = [25.53, 15.39, 7.47]
 DataVsArea_EJ3ESR  = [39.55, 32.23, 25.97, 14.71]
 DataVsArea_NIU3ESR = [19.07, 21.17, 17.32, 17.71]
+
+DataVsArea_TyvekErr     = Error*np.array(DataVsArea_Tyvek)
+DataVsArea_3p8ESRErr    = Error*np.array(DataVsArea_3p8ESR)
+DataVsArea_EJ3ESRErr    = Error*np.array(DataVsArea_EJ3ESR)
+DataVsArea_NIU3ESRErr   = Error*np.array(DataVsArea_NIU3ESR)
 
 aAreaSizes_Tyvek   = array.array('d', AreaSizes_Tyvek)
 aAreaSizes_3p8ESR  = array.array('d', AreaSizes_3p8ESR)
@@ -132,6 +138,10 @@ aDataVsArea_3p8ESR  = array.array('d', DataVsArea_3p8ESR)
 aDataVsArea_EJ3ESR  = array.array('d', DataVsArea_EJ3ESR)
 aDataVsArea_NIU3ESR = array.array('d', DataVsArea_NIU3ESR)
 
+aDataVsArea_TyvekErr  = array.array('d', DataVsArea_TyvekErr)
+DataVsArea_3p8ESRErr  = array.array('d', DataVsArea_3p8ESRErr)
+DataVsArea_EJ3ESRErr  = array.array('d', DataVsArea_EJ3ESRErr)
+DataVsArea_NIU3ESRErr = array.array('d', DataVsArea_NIU3ESRErr)
 
 
 ############################################
@@ -212,20 +222,20 @@ elif Samples == "NIU_3ESR":
 if Samples == "Tyvek":
     grSimulation = r.TGraphErrors(len(aTyvekAreas),aTyvekAreas,aSimVsArea_Tyvek,aAreas3p8_Err,aSimVsArea_TyvekErr)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aTyvekAreas), aAreaSizes_Tyvek, aDataVsArea_Tyvek)
+    grData = r.TGraphErrors(len(aTyvekAreas), aAreaSizes_Tyvek, aDataVsArea_Tyvek, aAreas3p8_Err, aDataVsArea_TyvekErr)
 elif Samples == "ESR_3p8":
     grSimulation = r.TGraphErrors(len(aESR3p8Areas),aESR3p8Areas,aSimVsArea_3p8ESR,aAreas3p8_Err,aSimVsArea_3p8ESRErr)
-    grData = r.TGraph(len(aAreaSizes_3p8ESR),aAreaSizes_3p8ESR,aDataVsArea_3p8ESR)
+    grData = r.TGraphErrors(len(aAreaSizes_3p8ESR),aAreaSizes_3p8ESR,aDataVsArea_3p8ESR, aAreas3p8_Err, aDataVsArea_3p8ESRErr)
     grMax = r.TMath.MaxElement(grData.GetN(),grData.GetY())
 
 elif Samples == "EJ200_3ESR":
     grSimulation = r.TGraphErrors(len(aESR3Areas_EJ200),aESR3Areas_EJ200,aSimVsArea_3ESR,aAreas3_Err,aSimVsArea_3ESRErr)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aAreaSizes_EJ3ESR),aAreaSizes_EJ3ESR,aDataVsArea_EJ3ESR)
+    grData = r.TGraphErrors(len(aAreaSizes_EJ3ESR),aAreaSizes_EJ3ESR,aDataVsArea_EJ3ESR, aAreas3_Err, aDataVsArea_EJ3ESRErr)
 elif Samples == "NIU_3ESR":
     grSimulation = r.TGraphErrors(len(aESR3Areas_NIU),aESR3Areas_NIU,aSimVsArea_3ESR_NIU,aAreas3_Err,aSimVsArea_3ESRErr_NIU)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraph(len(aAreaSizes_NIU3ESR),aAreaSizes_NIU3ESR,aDataVsArea_NIU3ESR)
+    grData = r.TGraphErrors(len(aAreaSizes_NIU3ESR),aAreaSizes_NIU3ESR,aDataVsArea_NIU3ESR, aAreas3_Err, aDataVsArea_NIU3ESRErr)
 
 
 
@@ -299,7 +309,7 @@ legend.SetTextSize(0.065)
 legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation, "Simulation", "PE")
-legend.AddEntry(grData, "Data", "P")
+legend.AddEntry(grData, "Data", "PE")
 
 legend.Draw("same")
 
@@ -312,7 +322,7 @@ aRatio    = array.array('d', Ratio)
 aRatioErr = array.array('d', RatioErr)
 aZero     = array.array('d', Zero)
 
-grRatio = r.TGraph(len(Ratio),grData.GetX(),aRatio)
+grRatio = r.TGraphErrors(len(Ratio),grData.GetX(),aRatio,aZero,aRatioErr)
 MaxRatio = r.TMath.MaxElement(grRatio.GetN(),grRatio.GetY())
 MinRatio = max(2. - MaxRatio, 0.)
 
