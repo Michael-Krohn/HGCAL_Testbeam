@@ -278,6 +278,8 @@ grSimulation_shifted.GetXaxis().SetLabelSize(0)
 grSimulation_shifted.GetYaxis().SetTitleSize(.12*3/7)
 grSimulation_shifted.GetYaxis().SetLabelSize(.12*3/7)
 
+simFit = r.TF1("simFit","[0]*x^[1]",0,30)
+grSimulation_shifted.Fit("simFit")
 
 c = r.TCanvas("c","c",1000,1000)
 c.SetFillColor(0)
@@ -313,6 +315,16 @@ legend.AddEntry(grData, "Data", "PE")
 
 legend.Draw("same")
 
+fitInfo = r.TLatex()
+par0 = simFit.GetParameter(0)
+par1 = simFit.GetParameter(1)
+
+print "par0: ", par0
+print "par1: ", par1
+
+fitInfo.SetTextAlign(12)
+fitInfo.SetTextSize(0.06)
+fitInfo.DrawLatexNDC(0.25,0.88,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
 
 ### Ratio plot ###
 unten.cd()
