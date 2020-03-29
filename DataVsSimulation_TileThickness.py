@@ -7,7 +7,7 @@ import copy
 import sets
 import collections
 import math
-import tdrstyle
+import CMS_lumi, tdrstyle
 import array
 import numpy as np
 
@@ -21,7 +21,7 @@ def getRatio(dataGraph, simGraph):
     if dataGraph.GetN() == simGraph.GetN():
 	for i in range(0,dataGraph.GetN()):
             ratio.append(dataGraph.GetY()[i]/simGraph.GetY()[i])
-            ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetE()[i])
+            ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetY()[i])
             zero.append(0.0)
     else:
         for i in range(0,dataGraph.GetN()):
@@ -78,6 +78,21 @@ def canvas_margin(c1, c1_up, c1_down):
   c1.SetRightMargin( 0.05 )
   c1.SetLeftMargin( 0.16 )
 
+#set the tdr style
+tdrstyle.setTDRStyle()
+
+#change the CMS_lumi variables (see CMS_lumi.py)
+CMS_lumi.lumi_7TeV = "4.8 fb^{-1}"
+CMS_lumi.lumi_8TeV = "18.3 fb^{-1}"
+CMS_lumi.writeExtraText = 1
+CMS_lumi.extraText = "Preliminary"
+CMS_lumi.lumi_sqrtS = "" # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
+
+iPos = 0
+#iPos = 11
+if( iPos==0 ): CMS_lumi.relPosX = 0.12
+
+iPeriod = 0
 
 ### Tile Sizes ###
 TileWidths  = [3.8, 7.6, 11.4]
@@ -350,6 +365,14 @@ unten.SetFrameFillStyle(1000)
 unten.SetFrameFillColor(0)
 oben.Draw()
 unten.Draw()
+
+CMS_lumi.CMS_lumi(c, iPeriod, iPos)
+c.cd()
+c.Update()
+c.RedrawAxis()
+frame = c.GetFrame()
+frame.Draw()
+
 oben.cd()
 
 grSimulation_shifted.Draw("AP")

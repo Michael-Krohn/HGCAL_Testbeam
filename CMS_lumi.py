@@ -114,6 +114,7 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     posX_ = 0
     if( iPosX%10<=1 ):
         posX_ =   l + relPosX*(1-l-r)
+	print "posX_: ", posX_
     elif( iPosX%10==2 ):
         posX_ =  l + 0.5*(1-l-r)
     elif( iPosX%10==3 ):
