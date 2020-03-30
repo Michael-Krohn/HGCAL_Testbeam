@@ -169,7 +169,6 @@ elif len(sys.argv) == 1:
 
 
 Samples = sys.argv[1]
-
 if Samples != "Tyvek" and Samples != "ESR_3p8" and Samples != "EJ200_3ESR" and Samples != "NIU_3ESR":
     print "Please use Tyvek, ESR_3p8, EJ200_3ESR, or NIU_3ESR as an argument"
     exit(0)
@@ -180,7 +179,9 @@ if Samples == "Tyvek":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsArea_Tyvek), 0, 1)
 
     for i in range(0, len(aSimVsArea_Tyvek)):
-        normGraph.SetBinContent(i, aDataVsArea_Tyvek[i]/aSimVsArea_Tyvek[i])
+        normGraph.SetBinContent(i+1, aDataVsArea_Tyvek[i]/aSimVsArea_Tyvek[i])
+	Error = (aDataVsArea_Tyvek[i]/aSimVsArea_Tyvek[i])*math.sqrt((aDataVsArea_TyvekErr[i]/aDataVsArea_Tyvek[i])**2 + (aSimVsArea_TyvekErr[i]/aSimVsArea_Tyvek[i])**2)
+	normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -194,7 +195,9 @@ elif Samples == "ESR_3p8":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsArea_3p8ESR), 0, 1)
 
     for i in range(0, len(aSimVsArea_3p8ESR)):
-        normGraph.SetBinContent(i, aDataVsArea_3p8ESR[i]/aSimVsArea_3p8ESR[i])
+        normGraph.SetBinContent(i+1, aDataVsArea_3p8ESR[i]/aSimVsArea_3p8ESR[i])
+	Error = (aDataVsArea_3p8ESR[i]/aSimVsArea_3p8ESR[i])*math.sqrt((aDataVsArea_3p8ESRErr[i]/aDataVsArea_3p8ESR[i])**2 + (aSimVsArea_3p8ESRErr[i]/aSimVsArea_3p8ESR[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -208,7 +211,9 @@ elif Samples == "EJ200_3ESR":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsArea_EJ3ESR), 0, 1)
 
     for i in range(0, len(aSimVsArea_3ESR)):
-	normGraph.SetBinContent(i, aDataVsArea_EJ3ESR[i]/aSimVsArea_3ESR[i])
+	normGraph.SetBinContent(i+1, aDataVsArea_EJ3ESR[i]/aSimVsArea_3ESR[i])
+        Error = (aDataVsArea_EJ3ESR[i]/aSimVsArea_3ESR[i])*math.sqrt((aDataVsArea_EJ3ESRErr[i]/aDataVsArea_EJ3ESR[i])**2 + (aSimVsArea_3ESRErr[i]/aSimVsArea_3ESR[i])**2)
+        normGraph.SetBinError(i+11, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -222,7 +227,9 @@ elif Samples == "NIU_3ESR":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsArea_NIU3ESR), 0, 1)
 
     for i in range(0, len(aSimVsArea_3ESR_NIU)):
-        normGraph.SetBinContent(i, aDataVsArea_NIU3ESR[i]/aSimVsArea_3ESR_NIU[i])
+        normGraph.SetBinContent(i+1, aDataVsArea_NIU3ESR[i]/aSimVsArea_3ESR_NIU[i])
+        Error = (aDataVsArea_NIU3ESR[i]/aSimVsArea_3ESR_NIU[i])*math.sqrt((aDataVsArea_NIU3ESRErr[i]/aDataVsArea_NIU3ESR[i])**2 + (aSimVsArea_3ESRErr_NIU[i]/aSimVsArea_3ESR_NIU[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -263,8 +270,8 @@ grSimulation.GetXaxis().SetTitle("Tile Area (cm^{2})")
 grSimulation.GetYaxis().SetTitle("MPV (PE)")
 grSimulation.GetYaxis().SetRangeUser(0, 1.5*grMax)
 grSimulation.GetXaxis().SetLabelSize(0)
-grSimulation.GetYaxis().SetTitleSize(.12*3/7)
-grSimulation.GetYaxis().SetLabelSize(.12*3/7)
+grSimulation.GetYaxis().SetTitleSize(.2*3/7)
+grSimulation.GetYaxis().SetLabelSize(.2*3/7)
 
 grData.SetMarkerColor(r.kBlack)
 grData.SetMarkerSize(2.5)
@@ -290,12 +297,14 @@ grSimulation_shifted.GetXaxis().SetTitle("Tile Area (cm^{2})")
 grSimulation_shifted.GetYaxis().SetTitle("MPV (PE)")
 grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.5*grMax)
 grSimulation_shifted.GetXaxis().SetLabelSize(0)
-grSimulation_shifted.GetYaxis().SetTitleSize(.12*3/7)
-grSimulation_shifted.GetYaxis().SetLabelSize(.12*3/7)
+grSimulation_shifted.GetYaxis().SetTitleSize(.15*3/7)
+grSimulation_shifted.GetYaxis().SetLabelSize(.15*3/7)
+grSimulation_shifted.GetYaxis().SetTitleOffset(0.8)
 
 simFit = r.TF1("simFit","[0]*x^[1]",0,30)
 grSimulation_shifted.Fit("simFit")
 
+#c = r.TCanvas("c","c")
 c = r.TCanvas("c","c",1000,1000)
 c.SetFillColor(0)
 c.SetBorderMode(0)
@@ -327,7 +336,7 @@ oben.cd()
 grSimulation_shifted.Draw("AP")
 grData_shifted.Draw("P same")
 
-legend = r.TLegend(0.66,0.76,0.97,0.93)
+legend = r.TLegend(0.66,0.68,0.97,0.93)
 legend.SetFillStyle(0)
 legend.SetBorderSize(1)
 legend.SetTextSize(0.065)
@@ -335,6 +344,7 @@ legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation, "Simulation", "PE")
 legend.AddEntry(grData, "Data", "PE")
+legend.AddEntry(simFit, "Fit", "L")
 
 legend.Draw("same")
 
@@ -347,7 +357,7 @@ print "par1: ", par1
 
 fitInfo.SetTextAlign(12)
 fitInfo.SetTextSize(0.06)
-fitInfo.DrawLatexNDC(0.25,0.88,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
+fitInfo.DrawLatexNDC(0.32,0.86,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
 
 ### Ratio plot ###
 unten.cd()
@@ -366,13 +376,13 @@ grRatio.SetMarkerColor(r.kBlack)
 grRatio.SetMarkerSize(2.5)
 grRatio.SetMarkerStyle(8)
 grRatio.GetXaxis().SetTitle("Tile Area (cm^{2})")
-grRatio.GetXaxis().SetTitleSize(.12)
-grRatio.GetXaxis().SetLabelSize(.12)
+grRatio.GetXaxis().SetTitleSize(.15)
+grRatio.GetXaxis().SetLabelSize(.15)
 grRatio.GetYaxis().SetTitle("#frac{Data}{Sim.}")
-grRatio.GetYaxis().SetTitleSize(.12)
-grRatio.GetYaxis().SetTitleOffset(0.45)
+grRatio.GetYaxis().SetTitleSize(.15)
+grRatio.GetYaxis().SetTitleOffset(0.4)
 grRatio.GetYaxis().CenterTitle()
-grRatio.GetYaxis().SetLabelSize(.12)
+grRatio.GetYaxis().SetLabelSize(.15)
 grRatio.GetYaxis().SetNdivisions(5, r.kTRUE)
 grRatio.GetYaxis().SetRangeUser(MinRatio - 0.2, MaxRatio + 0.2)
 

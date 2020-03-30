@@ -37,11 +37,11 @@ aHoleSizes  = array.array('d', HoleSizes)
 aHoleSizes_Err = array.array('d', HoleSizes_Err)
 
 ### Simulation Results ###
-WhiteSilkScreenSim     = [97.59, 88.63, 75.93]
-WhiteSilkScreenSim_Err = [12.16, 12.16, 13.78]
+WhiteSilkScreenSim     = [98.35, 91.07, 81.5]
+WhiteSilkScreenSim_Err = [11.97, 12.67, 14.84]
 
-BlackTapeSim     = [69.77, 62.44, 53.9]
-BlackTapeSim_Err = [9.45, 9.54, 10.33]
+BlackTapeSim     = [48.69, 24.98, 11.75]
+BlackTapeSim_Err = [7.358, 5.03, 3.679]
 
 aWhiteSilkScreenSim     = array.array('d', WhiteSilkScreenSim)
 aWhiteSilkScreenSim_Err = array.array('d', WhiteSilkScreenSim_Err)
@@ -92,7 +92,9 @@ if Samples == "1":
     normGraph = r.TH1F("normGraph","normGraph",len(aWhiteSilkScreen_1), 0, 1)
 
     for i in range(0, len(aWhiteSilkScreenSim)):
-        normGraph.SetBinContent(i, aWhiteSilkScreen_1[i]/aWhiteSilkScreenSim[i])
+        normGraph.SetBinContent(i+1, aWhiteSilkScreen_1[i]/aWhiteSilkScreenSim[i])
+	Error = (aWhiteSilkScreen_1[i]/aWhiteSilkScreenSim[i])*math.sqrt((aWhiteSilkScreenErr_1[i]/aWhiteSilkScreen_1[i])**2 + (aWhiteSilkScreenSim_Err[i]/aWhiteSilkScreenSim[i])**2)
+	normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -106,7 +108,9 @@ if Samples == "1":
     normGraph = r.TH1F("normGraph","normGraph",len(aBlackTape_1), 0, 1)
 
     for i in range(0, len(aBlackTapeSim)):
-        normGraph.SetBinContent(i, aBlackTape_1[i]/aBlackTapeSim[i])
+        normGraph.SetBinContent(i+1, aBlackTape_1[i]/aBlackTapeSim[i])
+        Error = (aBlackTape_1[i]/aBlackTapeSim[i])*math.sqrt((aBlackTapeErr_1[i]/aBlackTape_1[i])**2 + (aBlackTapeSim_Err[i]/aBlackTapeSim[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -121,7 +125,9 @@ elif Samples == "2":
     normGraph = r.TH1F("normGraph","normGraph",len(aWhiteSilkScreen_2), 0, 1)
 
     for i in range(0, len(aWhiteSilkScreenSim)):
-        normGraph.SetBinContent(i, aWhiteSilkScreen_2[i]/aWhiteSilkScreenSim[i])
+        normGraph.SetBinContent(i+1, aWhiteSilkScreen_2[i]/aWhiteSilkScreenSim[i])
+        Error = (aWhiteSilkScreen_2[i]/aWhiteSilkScreenSim[i])*math.sqrt((aWhiteSilkScreenErr_2[i]/aWhiteSilkScreen_2[i])**2 + (aWhiteSilkScreenSim_Err[i]/aWhiteSilkScreenSim[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -135,7 +141,9 @@ elif Samples == "2":
     normGraph = r.TH1F("normGraph","normGraph",len(aBlackTape_2), 0, 1)
 
     for i in range(0, len(aBlackTapeSim)):
-        normGraph.SetBinContent(i, aBlackTape_2[i]/aBlackTapeSim[i])
+        normGraph.SetBinContent(i+1, aBlackTape_2[i]/aBlackTapeSim[i])
+        Error = (aBlackTape_2[i]/aBlackTapeSim[i])*math.sqrt((aBlackTapeErr_2[i]/aBlackTape_2[i])**2 + (aBlackTapeSim_Err[i]/aBlackTapeSim[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -203,7 +211,7 @@ grData_White.Draw("P same")
 legend = r.TLegend(0.43,0.7,0.98,0.95)
 legend.SetFillStyle(0)
 legend.SetBorderSize(1)
-legend.SetTextSize(0.035)
+legend.SetTextSize(0.045)
 legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation_White, "Simulation White Silkscreen", "PE")

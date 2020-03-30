@@ -196,7 +196,9 @@ if Samples == "ESR3x3":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_ESR3x3), 0, 1)
 
     for i in range(0, len(aSimVsWidth_ESR3x3)):
-        normGraph.SetBinContent(i, aDataVsWidth_ESR3x3[i]/aSimVsWidth_ESR3x3[i])
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR3x3[i]/aSimVsWidth_ESR3x3[i])
+	Error = (aDataVsWidth_ESR3x3[i]/aSimVsWidth_ESR3x3[i])*math.sqrt((aDataVsWidth_ESR3x3Err[i]/aDataVsWidth_ESR3x3[i])**2 + (aSimVsWidth_ESR3x3_Err[i]/aSimVsWidth_ESR3x3[i])**2)
+	normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -210,7 +212,9 @@ elif Samples == "Tyvek3x3":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek3x3), 0, 1)
 
     for i in range(0, len(aSimVsWidth_Tyvek3x3)):
-        normGraph.SetBinContent(i, aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])
+        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])
+        Error = (aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])*math.sqrt((aDataVsWidth_Tyvek3x3Err[i]/aDataVsWidth_Tyvek3x3[i])**2 + (aSimVsWidth_Tyvek3x3_Err[i]/aSimVsWidth_Tyvek3x3[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -223,8 +227,20 @@ elif Samples == "Tyvek3x3":
 elif Samples == "ESR4x4":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_ESR4x4), 0, 1)
 
-    for i in range(0, len(aSimVsWidth_ESR4x4)):
-        normGraph.SetBinContent(i, aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i])
+    for i in range(0, len(aDataVsWidth_ESR4x4)):
+      if (i+1 > len(aTileWidths)):
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i-1])
+        Error = (aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i-1])*math.sqrt((aDataVsWidth_ESR4x4Err[i]/aDataVsWidth_ESR4x4[i])**2 + (aSimVsWidth_ESR4x4_Err[i-1]/aSimVsWidth_ESR4x4[i-1])**2)
+        normGraph.SetBinError(i+1, Error)
+      elif aTileWidths[i] == aTileWidths_ESR4x4[i]:
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i])
+        Error = (aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i])*math.sqrt((aDataVsWidth_ESR4x4Err[i]/aDataVsWidth_ESR4x4[i])**2 + (aSimVsWidth_ESR4x4_Err[i]/aSimVsWidth_ESR4x4[i])**2)
+        normGraph.SetBinError(i+1, Error)
+      else:
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i-1])
+        Error = (aDataVsWidth_ESR4x4[i]/aSimVsWidth_ESR4x4[i-1])*math.sqrt((aDataVsWidth_ESR4x4Err[i]/aDataVsWidth_ESR4x4[i])**2 + (aSimVsWidth_ESR4x4_Err[i-1]/aSimVsWidth_ESR4x4[i-1])**2)
+        normGraph.SetBinError(i+1, Error)
+
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -238,7 +254,9 @@ elif Samples == "Tyvek4x4":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek4x4), 0, 1)
 
     for i in range(0, len(aSimVsWidth_Tyvek4x4)):
-        normGraph.SetBinContent(i, aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])
+        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])
+        Error = (aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])*math.sqrt((aDataVsWidth_Tyvek4x4Err[i]/aDataVsWidth_Tyvek4x4[i])**2 + (aSimVsWidth_Tyvek4x4_Err[i]/aSimVsWidth_Tyvek4x4[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -251,8 +269,27 @@ elif Samples == "Tyvek4x4":
 elif Samples == "ESR5x5":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_ESR5x5), 0, 1)
 
-    for i in range(0, len(aSimVsWidth_ESR5x5)):
-        normGraph.SetBinContent(i, aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i])
+    for i in range(0, len(aDataVsWidth_ESR5x5)):
+      if (i ==  len(aTileWidths)):
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-1])
+        Error = (aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-1])*math.sqrt((aDataVsWidth_ESR5x5Err[i]/aDataVsWidth_ESR5x5[i])**2 + (aSimVsWidth_ESR5x5_Err[i-1]/aSimVsWidth_ESR5x5[i-1])**2)
+        normGraph.SetBinError(i+1, Error)
+      elif (i-1 == len(aTileWidths)):
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-2])
+        Error = (aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-2])*math.sqrt((aDataVsWidth_ESR5x5Err[i]/aDataVsWidth_ESR5x5[i])**2 + (aSimVsWidth_ESR5x5_Err[i-2]/aSimVsWidth_ESR5x5[i-2])**2)
+        normGraph.SetBinError(i+1, Error)
+      elif aTileWidths[i] == aTileWidths_ESR5x5[i]:
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i])
+        Error = (aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i])*math.sqrt((aDataVsWidth_ESR5x5Err[i]/aDataVsWidth_ESR5x5[i])**2 + (aSimVsWidth_ESR5x5_Err[i]/aSimVsWidth_ESR5x5[i])**2)
+        normGraph.SetBinError(i+1, Error)
+      else:
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-1])
+        Error = (aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-1])*math.sqrt((aDataVsWidth_ESR5x5Err[i]/aDataVsWidth_ESR5x5[i])**2 + (aSimVsWidth_ESR5x5_Err[i-1]/aSimVsWidth_ESR5x5[i-1])**2)
+        normGraph.SetBinError(i+1, Error)
+
+        normGraph.SetBinContent(i+1, aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i])
+        Error = (aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i])*math.sqrt((aDataVsWidth_ESR5x5Err[i]/aDataVsWidth_ESR5x5[i])**2 + (aSimVsWidth_ESR5x5_Err[i]/aSimVsWidth_ESR5x5[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -266,7 +303,9 @@ elif Samples == "Tyvek5x5":
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek5x5), 0, 1)
 
     for i in range(0, len(aSimVsWidth_Tyvek5x5)):
-        normGraph.SetBinContent(i, aDataVsWidth_Tyvek5x5[i]/aSimVsWidth_Tyvek5x5[i])
+        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek5x5[i]/aSimVsWidth_Tyvek5x5[i])
+        Error = (aDataVsWidth_Tyvek5x5[i]/aSimVsWidth_Tyvek5x5[i])*math.sqrt((aDataVsWidth_Tyvek5x5Err[i]/aDataVsWidth_Tyvek5x5[i])**2 + (aSimVsWidth_Tyvek5x5_Err[i]/aSimVsWidth_Tyvek5x5[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -341,12 +380,14 @@ grSimulation_shifted.GetXaxis().SetTitle("Tile Thickness (cm^{2})")
 grSimulation_shifted.GetYaxis().SetTitle("MPV (PE)")
 grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.5*grMax)
 grSimulation_shifted.GetXaxis().SetLabelSize(0)
-grSimulation_shifted.GetYaxis().SetTitleSize(.12*3/7)
-grSimulation_shifted.GetYaxis().SetLabelSize(.12*3/7)
+grSimulation_shifted.GetYaxis().SetTitleSize(.15*3/7)
+grSimulation_shifted.GetYaxis().SetLabelSize(.15*3/7)
+grSimulation_shifted.GetYaxis().SetTitleOffset(0.8)
 
 simFit = r.TF1("simFit","[0]*x^[1]",0,30)
 grSimulation_shifted.Fit("simFit")
 
+#c = r.TCanvas("c","c")
 c = r.TCanvas("c","c",1000,1000)
 c.SetFillColor(0)
 c.SetBorderMode(0)
@@ -378,7 +419,7 @@ oben.cd()
 grSimulation_shifted.Draw("AP")
 grData_shifted.Draw("P same")
 
-legend = r.TLegend(0.66,0.76,0.97,0.93)
+legend = r.TLegend(0.66,0.68,0.97,0.93)
 legend.SetFillStyle(0)
 legend.SetBorderSize(1)
 legend.SetTextSize(0.065)
@@ -386,6 +427,7 @@ legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation, "Simulation", "PE")
 legend.AddEntry(grData, "Data", "PE")
+legend.AddEntry(simFit, "Fit", "L")
 
 legend.Draw("same")
 
@@ -398,7 +440,7 @@ print "par1: ", par1
 
 fitInfo.SetTextAlign(12)
 fitInfo.SetTextSize(0.06)
-fitInfo.DrawLatexNDC(0.25,0.88,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
+fitInfo.DrawLatexNDC(0.32,0.86,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
 
 
 ### Ratio plot ###
@@ -423,13 +465,13 @@ grRatio.SetMarkerColor(r.kBlack)
 grRatio.SetMarkerSize(2.5)
 grRatio.SetMarkerStyle(8)
 grRatio.GetXaxis().SetTitle("Tile Thickness (cm^{2})")
-grRatio.GetXaxis().SetTitleSize(.12)
-grRatio.GetXaxis().SetLabelSize(.12)
+grRatio.GetXaxis().SetTitleSize(.15)
+grRatio.GetXaxis().SetLabelSize(.15)
 grRatio.GetYaxis().SetTitle("#frac{Data}{Sim.}")
-grRatio.GetYaxis().SetTitleSize(.12)
-grRatio.GetYaxis().SetTitleOffset(0.45)
+grRatio.GetYaxis().SetTitleSize(.15)
+grRatio.GetYaxis().SetTitleOffset(0.4)
 grRatio.GetYaxis().CenterTitle()
-grRatio.GetYaxis().SetLabelSize(.12)
+grRatio.GetYaxis().SetLabelSize(.15)
 grRatio.GetYaxis().SetNdivisions(5, r.kTRUE)
 grRatio.GetYaxis().SetRangeUser(MinRatio - 0.2, MaxRatio + 0.2)
 
