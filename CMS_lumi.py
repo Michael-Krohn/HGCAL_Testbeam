@@ -53,6 +53,9 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     b = pad.GetBottomMargin()
     e = 0.025
 
+    #print "H: ", H
+    #print "W: ", W
+
     pad.cd()
 
     lumiText = ""
@@ -88,7 +91,7 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     elif ( iPeriod==0 ):
         lumiText += lumi_sqrtS
             
-    print lumiText
+    #print lumiText
 
     latex = rt.TLatex()
     latex.SetNDC()
@@ -106,7 +109,9 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     if( outOfFrame ):
         latex.SetTextFont(cmsTextFont)
         latex.SetTextAlign(11) 
-        latex.SetTextSize(cmsTextSize*t)    
+        latex.SetTextSize(cmsTextSize*t) 
+	#print "l: ", l
+	#print "1-t+lumiTextOffset*t: ", 1-t+lumiTextOffset*t   
         latex.DrawLatex(l,1-t+lumiTextOffset*t,cmsText)
   
     pad.cd()
@@ -114,7 +119,6 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
     posX_ = 0
     if( iPosX%10<=1 ):
         posX_ =   l + relPosX*(1-l-r)
-	print "posX_: ", posX_
     elif( iPosX%10==2 ):
         posX_ =  l + 0.5*(1-l-r)
     elif( iPosX%10==3 ):
@@ -149,7 +153,8 @@ def CMS_lumi(pad,  iPeriod,  iPosX ):
                 latex.DrawLatex(posX_, posY_- relExtraDY*cmsTextSize*t, extraText)
     elif( writeExtraText ):
         if( iPosX==0):
-            posX_ =   l +  relPosX*(1-l-r)
+            posX_ =   l +  relPosX*(1-l-r) - 0.03
+	    #print "posX_: ", posX_
             posY_ =   1-t+lumiTextOffset*t
 
         latex.SetTextFont(extraTextFont)

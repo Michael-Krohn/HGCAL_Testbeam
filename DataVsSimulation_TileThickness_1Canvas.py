@@ -103,23 +103,24 @@ aTileWidths     = array.array('d', TileWidths)
 aTileWidths_Err = array.array('d', TileWidths_Err)
 
 ### Simulation Results ###
-SimVsWidth_Tyvek3x3     = [78.05, 103, 118]
-SimVsWidth_Tyvek3x3_Err = [11.87, 11.26, 11.46]
+nSimEvents = 4900.
+SimVsWidth_Tyvek3x3     = [85.4578, 118.386, 143.916]
+SimVsWidth_Tyvek3x3_Err = [0.134134, 0.153866, 0.167834]
 
-SimVsWidth_ESR3x3     = [90.51, 132.4, 156.4]
-SimVsWidth_ESR3x3_Err = [13.32, 12.39, 13.16]
+SimVsWidth_ESR3x3     = [108.139, 148.388, 177.255]
+SimVsWidth_ESR3x3_Err = [0.155984, 0.177714, 0.190449]
 
-SimVsWidth_Tyvek4x4     = [57.14, 67.98, 75.09]
-SimVsWidth_Tyvek4x4_Err = [8.11, 8.23, 8.82]
+SimVsWidth_Tyvek4x4     = [62.1939, 82.7129, 98.5389]
+SimVsWidth_Tyvek4x4_Err = [0.112051, 0.127609, 0.144776]
 
-SimVsWidth_ESR4x4     = [65.95, 88.17, 100.3]
-SimVsWidth_ESR4x4_Err = [8.73, 9.68, 10.21]
+SimVsWidth_ESR4x4     = [80.9702, 103.435, 120.074]
+SimVsWidth_ESR4x4_Err = [0.132965, 0.152671, 0.161318]
 
-SimVsWidth_Tyvek5x5     = [44.1, 48.56, 52.04]
-SimVsWidth_Tyvek5x5_Err = [6.75, 6.99, 7.55]
+SimVsWidth_Tyvek5x5     = [48.5061, 62.3339, 72.7687]
+SimVsWidth_Tyvek5x5_Err = [0.0976906, 0.109227, 0.121543]
 
-SimVsWidth_ESR5x5     = [51.88, 64.48, 70.24]
-SimVsWidth_ESR5x5_Err = [7.61, 8.54, 8.974]
+SimVsWidth_ESR5x5     = [64.281, 77.5397, 87.0071]
+SimVsWidth_ESR5x5_Err = [0.117311, 0.131397, 0.138845]
 
 
 aSimVsWidth_Tyvek3x3     = array.array('d', SimVsWidth_Tyvek3x3)
@@ -177,22 +178,23 @@ aDataVsWidth_ESR5x5Err   = array.array('d', DataVsWidth_ESR5x5Err)
 
 ############################################
 if len(sys.argv) == 2 and (sys.argv[1] == "--help" or sys.argv[1] == "-h"):
-    print "Please use Tyvek3x3, ESR3x3, Tyvek4x4, ESR4x4, Tyvek5x5, or ESR5x5 as an argument"
+    print "Please use Tyvek or ESR as an argument"
     exit(0)
 elif len(sys.argv) == 1:
-    print "Please use Tyvek3x3, ESR3x3, Tyvek4x4, ESR4x4, Tyvek5x5, or ESR5x5 as an argument"
+    print "Please use Tyvek or ESR as an argument"
     exit(0)
 
 
 Samples = sys.argv[1]
 
-if Samples != "Tyvek3x3" and Samples != "ESR3x3" and Samples != "Tyvek4x4" and Samples != "ESR4x4" and Samples != "Tyvek5x5" and Samples != "ESR5x5":
-    print "Please use Tyvek3x3, ESR3x3, Tyvek4x4, ESR4x4, Tyvek5x5, or ESR5x5 as an argument"
+if Samples != "Tyvek" and Samples != "ESR":
+    print "Please use Tyvek or ESR as an argument"
     exit(0)
 
 
 ### Normalizing Simulation ###
-if Samples == "ESR3x3":
+if Samples == "ESR":
+    ### Normalizing ESR3x3 ###
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_ESR3x3), 0, 1)
 
     for i in range(0, len(aSimVsWidth_ESR3x3)):
@@ -208,23 +210,8 @@ if Samples == "ESR3x3":
     for i in range(0, len(aSimVsWidth_ESR3x3)):
 	aSimVsWidth_ESR3x3[i] = aSimVsWidth_ESR3x3[i]*Norm
     	aSimVsWidth_ESR3x3_Err[i] = aSimVsWidth_ESR3x3_Err[i]*Norm
-elif Samples == "Tyvek3x3":
-    normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek3x3), 0, 1)
 
-    for i in range(0, len(aSimVsWidth_Tyvek3x3)):
-        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])
-        Error = (aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])*math.sqrt((aDataVsWidth_Tyvek3x3Err[i]/aDataVsWidth_Tyvek3x3[i])**2 + (aSimVsWidth_Tyvek3x3_Err[i]/aSimVsWidth_Tyvek3x3[i])**2)
-        normGraph.SetBinError(i+1, Error)
-
-    fit = r.TF1("fit","[0]")
-    normGraph.Fit("fit")
-
-    Norm = fit.GetParameter(0)
-    print "Norm: ", Norm
-    for i in range(0, len(aSimVsWidth_Tyvek3x3)):
-        aSimVsWidth_Tyvek3x3[i] = aSimVsWidth_Tyvek3x3[i]*Norm
-        aSimVsWidth_Tyvek3x3_Err[i] = aSimVsWidth_Tyvek3x3_Err[i]*Norm
-elif Samples == "ESR4x4":
+    ### Normalizing ESR4x4 ###
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_ESR4x4), 0, 1)
 
     for i in range(0, len(aDataVsWidth_ESR4x4)):
@@ -250,23 +237,8 @@ elif Samples == "ESR4x4":
     for i in range(0, len(aSimVsWidth_ESR4x4)):
         aSimVsWidth_ESR4x4[i] = aSimVsWidth_ESR4x4[i]*Norm
         aSimVsWidth_ESR4x4_Err[i] = aSimVsWidth_ESR4x4_Err[i]*Norm
-elif Samples == "Tyvek4x4":
-    normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek4x4), 0, 1)
 
-    for i in range(0, len(aSimVsWidth_Tyvek4x4)):
-        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])
-        Error = (aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])*math.sqrt((aDataVsWidth_Tyvek4x4Err[i]/aDataVsWidth_Tyvek4x4[i])**2 + (aSimVsWidth_Tyvek4x4_Err[i]/aSimVsWidth_Tyvek4x4[i])**2)
-        normGraph.SetBinError(i+1, Error)
-
-    fit = r.TF1("fit","[0]")
-    normGraph.Fit("fit")
-
-    Norm = fit.GetParameter(0)
-    print "Norm: ", Norm
-    for i in range(0, len(aSimVsWidth_Tyvek4x4)):
-        aSimVsWidth_Tyvek4x4[i] = aSimVsWidth_Tyvek4x4[i]*Norm
-        aSimVsWidth_Tyvek4x4_Err[i] = aSimVsWidth_Tyvek4x4_Err[i]*Norm
-elif Samples == "ESR5x5":
+    ### Normalizing ESR5x5 ###
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_ESR5x5), 0, 1)
 
     for i in range(0, len(aDataVsWidth_ESR5x5)):
@@ -287,6 +259,7 @@ elif Samples == "ESR5x5":
         Error = (aDataVsWidth_ESR5x5[i]/aSimVsWidth_ESR5x5[i-1])*math.sqrt((aDataVsWidth_ESR5x5Err[i]/aDataVsWidth_ESR5x5[i])**2 + (aSimVsWidth_ESR5x5_Err[i-1]/aSimVsWidth_ESR5x5[i-1])**2)
         normGraph.SetBinError(i+1, Error)
 
+
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
 
@@ -295,7 +268,44 @@ elif Samples == "ESR5x5":
     for i in range(0, len(aSimVsWidth_ESR5x5)):
         aSimVsWidth_ESR5x5[i] = aSimVsWidth_ESR5x5[i]*Norm
         aSimVsWidth_ESR5x5_Err[i] = aSimVsWidth_ESR5x5_Err[i]*Norm
-elif Samples == "Tyvek5x5":
+
+
+elif Samples == "Tyvek":
+    ### Normalizing Tyvek3x3 ###
+    normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek3x3), 0, 1)
+
+    for i in range(0, len(aSimVsWidth_Tyvek3x3)):
+        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])
+        Error = (aDataVsWidth_Tyvek3x3[i]/aSimVsWidth_Tyvek3x3[i])*math.sqrt((aDataVsWidth_Tyvek3x3Err[i]/aDataVsWidth_Tyvek3x3[i])**2 + (aSimVsWidth_Tyvek3x3_Err[i]/aSimVsWidth_Tyvek3x3[i])**2)
+        normGraph.SetBinError(i+1, Error)
+
+    fit = r.TF1("fit","[0]")
+    normGraph.Fit("fit")
+
+    Norm = fit.GetParameter(0)
+    print "Norm: ", Norm
+    for i in range(0, len(aSimVsWidth_Tyvek3x3)):
+        aSimVsWidth_Tyvek3x3[i] = aSimVsWidth_Tyvek3x3[i]*Norm
+        aSimVsWidth_Tyvek3x3_Err[i] = aSimVsWidth_Tyvek3x3_Err[i]*Norm
+
+    ### Normalizing Tyvek4x4 ###
+    normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek4x4), 0, 1)
+
+    for i in range(0, len(aSimVsWidth_Tyvek4x4)):
+        normGraph.SetBinContent(i+1, aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])
+        Error = (aDataVsWidth_Tyvek4x4[i]/aSimVsWidth_Tyvek4x4[i])*math.sqrt((aDataVsWidth_Tyvek4x4Err[i]/aDataVsWidth_Tyvek4x4[i])**2 + (aSimVsWidth_Tyvek4x4_Err[i]/aSimVsWidth_Tyvek4x4[i])**2)
+        normGraph.SetBinError(i+1, Error)
+
+    fit = r.TF1("fit","[0]")
+    normGraph.Fit("fit")
+
+    Norm = fit.GetParameter(0)
+    print "Norm: ", Norm
+    for i in range(0, len(aSimVsWidth_Tyvek4x4)):
+        aSimVsWidth_Tyvek4x4[i] = aSimVsWidth_Tyvek4x4[i]*Norm
+        aSimVsWidth_Tyvek4x4_Err[i] = aSimVsWidth_Tyvek4x4_Err[i]*Norm
+
+    ### Normalizing Tyvek5x5 ###
     normGraph = r.TH1F("normGraph","normGraph",len(aDataVsWidth_Tyvek5x5), 0, 1)
 
     for i in range(0, len(aSimVsWidth_Tyvek5x5)):
@@ -313,30 +323,38 @@ elif Samples == "Tyvek5x5":
         aSimVsWidth_Tyvek5x5_Err[i] = aSimVsWidth_Tyvek5x5_Err[i]*Norm
 
 ### Plotting ###
-if Samples == "Tyvek3x3":
+if Samples == "Tyvek":
+    ### 3x3 ###
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek3x3,aTileWidths_Err,aSimVsWidth_Tyvek3x3_Err)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
     grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek3x3, aTileWidths_Err, aDataVsWidth_Tyvek3x3Err)
-elif Samples == "ESR3x3":
+
+    ### 4x4 ###
+    grSimulation4x4 = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek4x4,aTileWidths_Err,aSimVsWidth_Tyvek4x4_Err)
+    grMax4x4 = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
+    grData4x4 = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek4x4, aTileWidths_Err, aDataVsWidth_Tyvek4x4Err)
+
+    ### 5x5 ###
+    grSimulation5x5 = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek5x5,aTileWidths_Err,aSimVsWidth_Tyvek5x5_Err)
+    grMax5x5 = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
+    grData5x5 = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek5x5, aTileWidths_Err, aDataVsWidth_Tyvek5x5Err)
+
+
+elif Samples == "ESR":
+    ### 3x3 ###
     grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR3x3,aTileWidths_Err,aSimVsWidth_ESR3x3_Err)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
     grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_ESR3x3,  aTileWidths_Err, aDataVsWidth_ESR3x3Err)
-elif Samples == "Tyvek4x4":
-    grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek4x4,aTileWidths_Err,aSimVsWidth_Tyvek4x4_Err)
-    grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek4x4, aTileWidths_Err, aDataVsWidth_Tyvek4x4Err)
-elif Samples == "ESR4x4":
-    grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR4x4,aTileWidths_Err,aSimVsWidth_ESR4x4_Err)
-    grData = r.TGraphErrors(len(aTileWidths_ESR4x4), aTileWidths_ESR4x4, aDataVsWidth_ESR4x4, aTileWidths_Err, aDataVsWidth_ESR4x4Err)
-    grMax = r.TMath.MaxElement(grData.GetN(),grData.GetY())
-elif Samples == "Tyvek5x5":
-    grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_Tyvek5x5,aTileWidths_Err,aSimVsWidth_Tyvek5x5_Err)
-    grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraphErrors(len(aTileWidths), aTileWidths, aDataVsWidth_Tyvek5x5, aTileWidths_Err, aDataVsWidth_Tyvek5x5Err)
-elif Samples == "ESR5x5":
-    grSimulation = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR5x5,aTileWidths_Err,aSimVsWidth_ESR5x5_Err)
-    grData = r.TGraphErrors(len(aTileWidths_ESR5x5), aTileWidths_ESR5x5, aDataVsWidth_ESR5x5, aTileWidths_Err, aDataVsWidth_ESR5x5Err)
-    grMax = r.TMath.MaxElement(grData.GetN(),grData.GetY())
+
+    ### 4x4 ###
+    grSimulation4x4 = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR4x4,aTileWidths_Err,aSimVsWidth_ESR4x4_Err)
+    grData4x4 = r.TGraphErrors(len(aTileWidths_ESR4x4), aTileWidths_ESR4x4, aDataVsWidth_ESR4x4, aTileWidths_Err, aDataVsWidth_ESR4x4Err)
+    grMax4x4 = r.TMath.MaxElement(grData.GetN(),grData.GetY())
+
+    ### 5x5 ###
+    grSimulation5x5 = r.TGraphErrors(len(aTileWidths),aTileWidths,aSimVsWidth_ESR5x5,aTileWidths_Err,aSimVsWidth_ESR5x5_Err)
+    grData5x5 = r.TGraphErrors(len(aTileWidths_ESR5x5), aTileWidths_ESR5x5, aDataVsWidth_ESR5x5, aTileWidths_Err, aDataVsWidth_ESR5x5Err)
+    grMax5x5 = r.TMath.MaxElement(grData.GetN(),grData.GetY())
 
 
 
@@ -356,15 +374,40 @@ grData.SetMarkerColor(r.kBlack)
 grData.SetMarkerSize(2.5)
 grData.SetMarkerStyle(8)
 
+grData4x4.SetMarkerColor(r.kBlue)
+grData4x4.SetMarkerSize(2.5)
+grData4x4.SetMarkerStyle(8)
+
+grData5x5.SetMarkerColor(r.kViolet)
+grData5x5.SetMarkerSize(2.5)
+grData5x5.SetMarkerStyle(8)
+
+
 grSimulation_shifted = grSimulation.Clone("grSimulation_shifted")
 grData_shifted       = grData.Clone("grData_shifted")
+
+grSimulation4x4_shifted = grSimulation4x4.Clone("grSimulation4x4_shifted")
+grData4x4_shifted       = grData4x4.Clone("grData4x4_shifted")
+
+grSimulation5x5_shifted = grSimulation5x5.Clone("grSimulation5x5_shifted")
+grData5x5_shifted       = grData5x5.Clone("grData5x5_shifted")
 
 ### Shifting the x-positions of the graphs so that they are side-by-side ###
 shift = (grSimulation_shifted.GetX()[grSimulation_shifted.GetN() - 1] - grSimulation_shifted.GetX()[0])/60.
 
 for i in range(0,grSimulation_shifted.GetN()):
     grSimulation_shifted.SetPoint(i, grSimulation.GetX()[i] + shift, grSimulation.GetY()[i])
+for i in range(0,grSimulation4x4_shifted.GetN()):
+    grSimulation4x4_shifted.SetPoint(i, grSimulation4x4.GetX()[i] + shift, grSimulation4x4.GetY()[i])
+for i in range(0,grSimulation5x5_shifted.GetN()):
+    grSimulation5x5_shifted.SetPoint(i, grSimulation5x5.GetX()[i] + shift, grSimulation5x5.GetY()[i])
+
+for i in range(0,grData_shifted.GetN()):
     grData_shifted.SetPoint(i, grData.GetX()[i] - shift, grData.GetY()[i])
+for i in range(0,grData4x4_shifted.GetN()):
+    grData4x4_shifted.SetPoint(i, grData4x4.GetX()[i] - shift, grData4x4.GetY()[i])
+for i in range(0,grData5x5_shifted.GetN()):
+    grData5x5_shifted.SetPoint(i, grData5x5.GetX()[i] - shift, grData5x5.GetY()[i])
 
 
 grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.5*grMax)
@@ -374,14 +417,41 @@ grSimulation_shifted.SetMarkerSize(2.5)
 grSimulation_shifted.SetMarkerStyle(32)
 grSimulation_shifted.GetXaxis().SetTitle("Tile Thickness (cm)")
 grSimulation_shifted.GetYaxis().SetTitle("MPV (PE)")
-grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.5*grMax)
-grSimulation_shifted.GetXaxis().SetLabelSize(0)
+grSimulation_shifted.GetYaxis().SetRangeUser(0, 2*grMax)
+grSimulation_shifted.GetXaxis().SetLabelSize(.15*3/7)
+grSimulation_shifted.GetXaxis().SetTitleSize(.15*3/7)
 grSimulation_shifted.GetYaxis().SetTitleSize(.15*3/7)
 grSimulation_shifted.GetYaxis().SetLabelSize(.15*3/7)
 grSimulation_shifted.GetYaxis().SetTitleOffset(0.8)
 
-simFit = r.TF1("simFit","[0]*x^[1]",0,30)
-grSimulation_shifted.Fit("simFit")
+grSimulation4x4_shifted.SetMarkerColor(r.kOrange)
+grSimulation4x4_shifted.SetLineColor(r.kOrange)
+grSimulation4x4_shifted.SetMarkerSize(2.5)
+grSimulation4x4_shifted.SetMarkerStyle(32)
+
+grSimulation5x5_shifted.SetMarkerColor(r.kGreen)
+grSimulation5x5_shifted.SetLineColor(r.kGreen)
+grSimulation5x5_shifted.SetMarkerSize(2.5)
+grSimulation5x5_shifted.SetMarkerStyle(32)
+
+
+simFit = r.TF1("simFit","[0]*(x/3.8)^[1]",0,30)
+simFit.SetLineColor(r.kBlack)
+grData_shifted.Fit("simFit")
+#grSimulation_shifted.Fit("simFit")
+
+simFit4x4 = r.TF1("simFit4x4","[0]*(x/3.8)^[1]",0,30)
+simFit4x4.SetLineColor(r.kBlue)
+#simFit4x4.SetLineColor(r.kOrange)
+grData4x4_shifted.Fit("simFit4x4")
+#grSimulation4x4_shifted.Fit("simFit4x4")
+
+simFit5x5 = r.TF1("simFit5x5","[0]*(x/3.8)^[1]",0,30)
+simFit5x5.SetLineColor(r.kViolet)
+#simFit5x5.SetLineColor(r.kGreen)
+grData5x5_shifted.Fit("simFit5x5")
+#grSimulation5x5_shifted.Fit("simFit5x5")
+
 
 #c = r.TCanvas("c","c")
 c = r.TCanvas("c","c",1000,1000)
@@ -390,18 +460,18 @@ c.SetBorderMode(0)
 c.SetBorderSize(2)
 c.SetFrameBorderMode(0)
 
-oben = r.TPad('oben','oben',0,0.3 ,1.0,1.0)
-unten = r.TPad('unten','unten',0,0.0,1.0,0.3)
-canvas_margin(c,oben,unten)
+#oben = r.TPad('oben','oben',0,0.3 ,1.0,1.0)
+#unten = r.TPad('unten','unten',0,0.0,1.0,0.3)
+#canvas_margin(c,oben,unten)
 
-oben.SetFillStyle(4000)
-oben.SetFrameFillStyle(1000)
-oben.SetFrameFillColor(0)
-unten.SetFillStyle(4000)
-unten.SetFrameFillStyle(1000)
-unten.SetFrameFillColor(0)
-oben.Draw()
-unten.Draw()
+#oben.SetFillStyle(4000)
+#oben.SetFrameFillStyle(1000)
+#oben.SetFrameFillColor(0)
+#unten.SetFillStyle(4000)
+#unten.SetFrameFillStyle(1000)
+#unten.SetFrameFillColor(0)
+#oben.Draw()
+#unten.Draw()
 
 CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 c.cd()
@@ -410,77 +480,65 @@ c.RedrawAxis()
 frame = c.GetFrame()
 frame.Draw()
 
-oben.cd()
+#oben.cd()
 
 grSimulation_shifted.Draw("AP")
 grData_shifted.Draw("P same")
+grSimulation4x4_shifted.Draw("P same")
+grData4x4_shifted.Draw("P same")
+grSimulation5x5_shifted.Draw("P same")
+grData5x5_shifted.Draw("P same")
 
-legend = r.TLegend(0.66,0.68,0.97,0.93)
+CMS_lumi.CMS_lumi(c, iPeriod, iPos)
+
+
+legend = r.TLegend(0.55,0.6,0.98,0.95)
 legend.SetFillStyle(0)
-legend.SetBorderSize(1)
-legend.SetTextSize(0.065)
+legend.SetBorderSize(0)
+legend.SetTextSize(0.04)
 legend.SetTextFont(42)
 
-legend.AddEntry(grSimulation, "Simulation", "PE")
-legend.AddEntry(grData, "Data", "PE")
-legend.AddEntry(simFit, "Fit", "L")
+legend2 = r.TLegend(0.16,0.6,0.55,0.95)
+legend2.SetFillStyle(0)
+legend2.SetBorderSize(0)
+legend2.SetTextSize(0.04)
+legend2.SetTextFont(42)
+
+
+legend2.AddEntry(grSimulation, "3#times3 cm^{2} Simulation", "PE")
+legend2.AddEntry(grData, "3#times3 cm^{2} Data", "PE")
+legend2.AddEntry(grSimulation4x4_shifted, "4#times4 cm^{2} Simulation", "PE")
+legend2.AddEntry(grData4x4_shifted, "4#times4 cm^{2} Data", "PE")
+legend2.AddEntry(grSimulation5x5_shifted, "5#times5 cm^{2} Simulation", "PE")
+legend.AddEntry(grData5x5_shifted, "5#times5 cm^{2} Data", "PE")
+
+legend.AddEntry(simFit, "3#times3 cm^{2} Data Fit", "L")
+legend.AddEntry(simFit4x4, "4#times4 cm^{2} Data Fit", "L")
+legend.AddEntry(simFit5x5, "5#times5 cm^{2} Data Fit", "L")
+#legend.AddEntry(simFit, "3#times3 cm^{2} Simulation Fit", "L")
+#legend.AddEntry(simFit4x4, "4#times4 cm^{2} Simulation Fit", "L")
+#legend.AddEntry(simFit5x5, "5#times5 cm^{2} Simulation Fit", "L")
 
 legend.Draw("same")
+legend2.Draw("same")
 
 fitInfo = r.TLatex()
 par0 = simFit.GetParameter(0)
 par1 = simFit.GetParameter(1)
+chi2 = simFit.GetChisquare()
+ndf  = simFit.GetNDF()
 
 print "par0: ", par0
 print "par1: ", par1
+print "3x3 chi2/ndf: ", chi2/ndf
+print "4x4 chi2/ndf: ", simFit4x4.GetChisquare()/simFit4x4.GetNDF()
+print "5x5 chi2/ndf: ", simFit5x5.GetChisquare()/simFit5x5.GetNDF()
+
 
 fitInfo.SetTextAlign(12)
 fitInfo.SetTextSize(0.06)
-fitInfo.DrawLatexNDC(0.32,0.86,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
+#fitInfo.DrawLatexNDC(0.32,0.86,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
 
-
-### Ratio plot ###
-unten.cd()
-
-Ratio, RatioErr, Zero = getRatio(grData, grSimulation)
-aRatio    = array.array('d', Ratio)
-aRatioErr = array.array('d', RatioErr)
-aZero     = array.array('d', Zero)
-
-grRatio = r.TGraphErrors(len(Ratio),grData.GetX(),aRatio,aZero,aRatioErr)
-MaxRatio = r.TMath.MaxElement(grRatio.GetN(),grRatio.GetY())
-MinRatio = r.TMath.MinElement(grRatio.GetN(),grRatio.GetY())
-
-if(abs(MaxRatio-1) > abs(MinRatio-1)):
-    MinRatio = max(2. - MaxRatio, 0.)
-else:
-    MaxRatio = 2. - MinRatio
-
-grRatio.SetTitle("")
-grRatio.SetMarkerColor(r.kBlack)
-grRatio.SetMarkerSize(2.5)
-grRatio.SetMarkerStyle(8)
-grRatio.GetXaxis().SetTitle("Tile Thickness (cm)")
-grRatio.GetXaxis().SetTitleSize(.15)
-grRatio.GetXaxis().SetLabelSize(.15)
-grRatio.GetYaxis().SetTitle("#frac{Data}{Sim.}")
-grRatio.GetYaxis().SetTitleSize(.15)
-grRatio.GetYaxis().SetTitleOffset(0.4)
-grRatio.GetYaxis().CenterTitle()
-grRatio.GetYaxis().SetLabelSize(.15)
-grRatio.GetYaxis().SetNdivisions(5, r.kTRUE)
-grRatio.GetYaxis().SetRangeUser(MinRatio - 0.2, MaxRatio + 0.2)
-
-grRatio.Draw("AP")
-
-Ratio_allErr = getMCratioError(grSimulation)
-
-Ratio_allErr.SetMarkerColor(r.kRed)
-Ratio_allErr.SetMarkerSize(0)
-Ratio_allErr.SetFillStyle(3013)
-Ratio_allErr.SetFillColor(r.kRed)
-Ratio_allErr.SetLineColor(0)
-Ratio_allErr.Draw("E2same")
 
 
 c.SaveAs("Data_vs_Simulation_Width_" + Samples +".pdf")

@@ -14,16 +14,18 @@ import numpy as np
 ### Returns the data/sim ratio and the data error/sim ratio ###
 def getRatio(dataGraph, simGraph):
 
-    ratio    = []
-    ratioErr = []
-    zero     = []
+    ratio      = []
+    ratioErrLo = []
+    ratioErrHi = []
+    zero       = []
     for i in range(0,dataGraph.GetN()):
 	ratio.append(dataGraph.GetY()[i]/simGraph.GetY()[i])
-	ratioErr.append(dataGraph.GetEY()[i]/simGraph.GetY()[i])
+	ratioErrHi.append(dataGraph.GetErrorYhigh(i)/simGraph.GetY()[i])
+        ratioErrLo.append(dataGraph.GetErrorYlow(i)/simGraph.GetY()[i])
 	zero.append(0.0)
 
 
-    return ratio, ratioErr, zero
+    return ratio, ratioErrLo, ratioErrHi, zero
 
 ### Returns the sim errors for the ratio plot ###
 def getMCratioError(simGraph):
@@ -101,20 +103,21 @@ aAreas3p8_Err = array.array('d', Areas3p8_Err)
 aAreas3_Err   = array.array('d', Areas3_Err)
 
 ### Simulation Results ###
+nSimEvents = 4900.
 SimVsArea_Tyvek     = [78.05, 57.14, 44.1]
-SimVsArea_TyvekErr  = [11.87, 8.11, 6.75]
+SimVsArea_TyvekErr  = [11.87/math.sqrt(nSimEvents), 8.11/math.sqrt(nSimEvents), 6.75/math.sqrt(nSimEvents)]
 
 SimVsArea_3p8ESR    = [90.51, 65.95, 51.88]
-SimVsArea_3p8ESRErr = [13.32, 8.73, 7.61]
+SimVsArea_3p8ESRErr = [13.32/math.sqrt(nSimEvents), 8.73/math.sqrt(nSimEvents), 7.61/math.sqrt(nSimEvents)]
 
-SimVsArea_3ESR     = [97.17, 75.95, 67.34, 41.44]
-SimVsArea_3ESRErr  = [21.99, 13.81, 10.93, 6.86]
+SimVsArea_3ESR     = [118.244, 94.0956, 84.2592, 53.2837]
+SimVsArea_3ESRErr  = [0.166518, 0.147217, 0.138715, 0.10428]
 
-SimVsArea_3ESR_NIU     = [67.34, 65.36, 61.91, 60.4]
-SimVsArea_3ESRErr_NIU  = [10.93, 10.64, 10.05, 9.84]
+SimVsArea_3ESR_NIU     = [84.2592, 81.9827, 78.0555, 76.152]
+SimVsArea_3ESRErr_NIU  = [0.138715, 0.136787, 0.131719, 0.129507]
 
 SimVsArea_3ESR_all     = [97.17, 75.95, 67.34, 65.36, 61.91, 60.4, 41.44]
-SimVsArea_3ESRErr_all  = [21.99, 13.81, 10.93, 10.64, 10.05, 9.84, 6.86]
+SimVsArea_3ESRErr_all  = [21.99/math.sqrt(nSimEvents), 13.81/math.sqrt(nSimEvents), 10.93/math.sqrt(nSimEvents), 10.64/math.sqrt(nSimEvents), 10.05/math.sqrt(nSimEvents), 9.84/math.sqrt(nSimEvents), 6.86/math.sqrt(nSimEvents)]
 
 
 aSimVsArea_Tyvek     = array.array('d', SimVsArea_Tyvek)
@@ -127,7 +130,8 @@ aSimVsArea_3ESR_NIU      = array.array('d', SimVsArea_3ESR_NIU)
 aSimVsArea_3ESRErr_NIU   = array.array('d', SimVsArea_3ESRErr_NIU)
 
 ### Data Results ###
-Error = 0.0176
+ErrorHi = 0.071
+ErrorLo = 0.014
 AreaSizes_Tyvek   = [9, 16, 25]
 AreaSizes_3p8ESR  = [9, 16, 25]
 AreaSizes_EJ3ESR  = [2.3*2.3, 9, 3.4*3.4, 5.5*5.5]
@@ -138,10 +142,15 @@ DataVsArea_3p8ESR  = [25.53, 15.39, 7.47]
 DataVsArea_EJ3ESR  = [39.55, 32.23, 25.97, 14.71]
 DataVsArea_NIU3ESR = [19.07, 21.17, 17.32, 17.71]
 
-DataVsArea_TyvekErr     = Error*np.array(DataVsArea_Tyvek)
-DataVsArea_3p8ESRErr    = Error*np.array(DataVsArea_3p8ESR)
-DataVsArea_EJ3ESRErr    = Error*np.array(DataVsArea_EJ3ESR)
-DataVsArea_NIU3ESRErr   = Error*np.array(DataVsArea_NIU3ESR)
+DataVsArea_TyvekErrLo     = ErrorLo*np.array(DataVsArea_Tyvek)
+DataVsArea_3p8ESRErrLo    = ErrorLo*np.array(DataVsArea_3p8ESR)
+DataVsArea_EJ3ESRErrLo    = ErrorLo*np.array(DataVsArea_EJ3ESR)
+DataVsArea_NIU3ESRErrLo   = ErrorLo*np.array(DataVsArea_NIU3ESR)
+
+DataVsArea_TyvekErrHi     = ErrorHi*np.array(DataVsArea_Tyvek)
+DataVsArea_3p8ESRErrHi    = ErrorHi*np.array(DataVsArea_3p8ESR)
+DataVsArea_EJ3ESRErrHi    = ErrorHi*np.array(DataVsArea_EJ3ESR)
+DataVsArea_NIU3ESRErrHi   = ErrorHi*np.array(DataVsArea_NIU3ESR)
 
 aAreaSizes_Tyvek   = array.array('d', AreaSizes_Tyvek)
 aAreaSizes_3p8ESR  = array.array('d', AreaSizes_3p8ESR)
@@ -153,10 +162,15 @@ aDataVsArea_3p8ESR  = array.array('d', DataVsArea_3p8ESR)
 aDataVsArea_EJ3ESR  = array.array('d', DataVsArea_EJ3ESR)
 aDataVsArea_NIU3ESR = array.array('d', DataVsArea_NIU3ESR)
 
-aDataVsArea_TyvekErr  = array.array('d', DataVsArea_TyvekErr)
-aDataVsArea_3p8ESRErr  = array.array('d', DataVsArea_3p8ESRErr)
-aDataVsArea_EJ3ESRErr  = array.array('d', DataVsArea_EJ3ESRErr)
-aDataVsArea_NIU3ESRErr = array.array('d', DataVsArea_NIU3ESRErr)
+aDataVsArea_TyvekErrLo   = array.array('d', DataVsArea_TyvekErrLo)
+aDataVsArea_3p8ESRErrLo  = array.array('d', DataVsArea_3p8ESRErrLo)
+aDataVsArea_EJ3ESRErrLo  = array.array('d', DataVsArea_EJ3ESRErrLo)
+aDataVsArea_NIU3ESRErrLo = array.array('d', DataVsArea_NIU3ESRErrLo)
+
+aDataVsArea_TyvekErrHi   = array.array('d', DataVsArea_TyvekErrHi)
+aDataVsArea_3p8ESRErrHi  = array.array('d', DataVsArea_3p8ESRErrHi)
+aDataVsArea_EJ3ESRErrHi  = array.array('d', DataVsArea_EJ3ESRErrHi)
+aDataVsArea_NIU3ESRErrHi = array.array('d', DataVsArea_NIU3ESRErrHi)
 
 
 ############################################
@@ -180,7 +194,7 @@ if Samples == "Tyvek":
 
     for i in range(0, len(aSimVsArea_Tyvek)):
         normGraph.SetBinContent(i+1, aDataVsArea_Tyvek[i]/aSimVsArea_Tyvek[i])
-	Error = (aDataVsArea_Tyvek[i]/aSimVsArea_Tyvek[i])*math.sqrt((aDataVsArea_TyvekErr[i]/aDataVsArea_Tyvek[i])**2 + (aSimVsArea_TyvekErr[i]/aSimVsArea_Tyvek[i])**2)
+	Error = (aDataVsArea_Tyvek[i]/aSimVsArea_Tyvek[i])*math.sqrt((((aDataVsArea_TyvekErrLo[i] + aDataVsArea_TyvekErrHi[i])/2)/aDataVsArea_Tyvek[i])**2 + (aSimVsArea_TyvekErr[i]/aSimVsArea_Tyvek[i])**2)
 	normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
@@ -196,7 +210,7 @@ elif Samples == "ESR_3p8":
 
     for i in range(0, len(aSimVsArea_3p8ESR)):
         normGraph.SetBinContent(i+1, aDataVsArea_3p8ESR[i]/aSimVsArea_3p8ESR[i])
-	Error = (aDataVsArea_3p8ESR[i]/aSimVsArea_3p8ESR[i])*math.sqrt((aDataVsArea_3p8ESRErr[i]/aDataVsArea_3p8ESR[i])**2 + (aSimVsArea_3p8ESRErr[i]/aSimVsArea_3p8ESR[i])**2)
+	Error = (aDataVsArea_3p8ESR[i]/aSimVsArea_3p8ESR[i])*math.sqrt((((aDataVsArea_3p8ESRErrLo[i] + aDataVsArea_3p8ESRErrHi[i])/2)/aDataVsArea_3p8ESR[i])**2 + (aSimVsArea_3p8ESRErr[i]/aSimVsArea_3p8ESR[i])**2)
         normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
@@ -212,8 +226,8 @@ elif Samples == "EJ200_3ESR":
 
     for i in range(0, len(aSimVsArea_3ESR)):
 	normGraph.SetBinContent(i+1, aDataVsArea_EJ3ESR[i]/aSimVsArea_3ESR[i])
-        Error = (aDataVsArea_EJ3ESR[i]/aSimVsArea_3ESR[i])*math.sqrt((aDataVsArea_EJ3ESRErr[i]/aDataVsArea_EJ3ESR[i])**2 + (aSimVsArea_3ESRErr[i]/aSimVsArea_3ESR[i])**2)
-        normGraph.SetBinError(i+11, Error)
+        Error = (aDataVsArea_EJ3ESR[i]/aSimVsArea_3ESR[i])*math.sqrt((((aDataVsArea_EJ3ESRErrLo[i] + aDataVsArea_EJ3ESRErrHi[i])/2)/aDataVsArea_EJ3ESR[i])**2 + (aSimVsArea_3ESRErr[i]/aSimVsArea_3ESR[i])**2)
+        normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
     normGraph.Fit("fit")
@@ -228,7 +242,7 @@ elif Samples == "NIU_3ESR":
 
     for i in range(0, len(aSimVsArea_3ESR_NIU)):
         normGraph.SetBinContent(i+1, aDataVsArea_NIU3ESR[i]/aSimVsArea_3ESR_NIU[i])
-        Error = (aDataVsArea_NIU3ESR[i]/aSimVsArea_3ESR_NIU[i])*math.sqrt((aDataVsArea_NIU3ESRErr[i]/aDataVsArea_NIU3ESR[i])**2 + (aSimVsArea_3ESRErr_NIU[i]/aSimVsArea_3ESR_NIU[i])**2)
+        Error = (aDataVsArea_NIU3ESR[i]/aSimVsArea_3ESR_NIU[i])*math.sqrt((((aDataVsArea_NIU3ESRErrLo[i] + aDataVsArea_NIU3ESRErrHi[i])/2)/aDataVsArea_NIU3ESR[i])**2 + (aSimVsArea_3ESRErr_NIU[i]/aSimVsArea_3ESR_NIU[i])**2)
         normGraph.SetBinError(i+1, Error)
 
     fit = r.TF1("fit","[0]")
@@ -244,20 +258,20 @@ elif Samples == "NIU_3ESR":
 if Samples == "Tyvek":
     grSimulation = r.TGraphErrors(len(aTyvekAreas),aTyvekAreas,aSimVsArea_Tyvek,aAreas3p8_Err,aSimVsArea_TyvekErr)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraphErrors(len(aTyvekAreas), aAreaSizes_Tyvek, aDataVsArea_Tyvek, aAreas3p8_Err, aDataVsArea_TyvekErr)
+    grData = r.TGraphAsymmErrors(len(aTyvekAreas), aAreaSizes_Tyvek, aDataVsArea_Tyvek, aAreas3p8_Err, aAreas3p8_Err, aDataVsArea_TyvekErrLo, aDataVsArea_TyvekErrHi)
 elif Samples == "ESR_3p8":
     grSimulation = r.TGraphErrors(len(aESR3p8Areas),aESR3p8Areas,aSimVsArea_3p8ESR,aAreas3p8_Err,aSimVsArea_3p8ESRErr)
-    grData = r.TGraphErrors(len(aAreaSizes_3p8ESR),aAreaSizes_3p8ESR,aDataVsArea_3p8ESR, aAreas3p8_Err, aDataVsArea_3p8ESRErr)
+    grData = r.TGraphAsymmErrors(len(aAreaSizes_3p8ESR),aAreaSizes_3p8ESR,aDataVsArea_3p8ESR, aAreas3p8_Err, aAreas3p8_Err, aDataVsArea_3p8ESRErrLo, aDataVsArea_3p8ESRErrHi)
     grMax = r.TMath.MaxElement(grData.GetN(),grData.GetY())
 
 elif Samples == "EJ200_3ESR":
     grSimulation = r.TGraphErrors(len(aESR3Areas_EJ200),aESR3Areas_EJ200,aSimVsArea_3ESR,aAreas3_Err,aSimVsArea_3ESRErr)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraphErrors(len(aAreaSizes_EJ3ESR),aAreaSizes_EJ3ESR,aDataVsArea_EJ3ESR, aAreas3_Err, aDataVsArea_EJ3ESRErr)
+    grData = r.TGraphAsymmErrors(len(aAreaSizes_EJ3ESR),aAreaSizes_EJ3ESR,aDataVsArea_EJ3ESR, aAreas3_Err, aAreas3_Err, aDataVsArea_EJ3ESRErrLo, aDataVsArea_EJ3ESRErrHi)
 elif Samples == "NIU_3ESR":
     grSimulation = r.TGraphErrors(len(aESR3Areas_NIU),aESR3Areas_NIU,aSimVsArea_3ESR_NIU,aAreas3_Err,aSimVsArea_3ESRErr_NIU)
     grMax = r.TMath.MaxElement(grSimulation.GetN(),grSimulation.GetY())
-    grData = r.TGraphErrors(len(aAreaSizes_NIU3ESR),aAreaSizes_NIU3ESR,aDataVsArea_NIU3ESR, aAreas3_Err, aDataVsArea_NIU3ESRErr)
+    grData = r.TGraphAsymmErrors(len(aAreaSizes_NIU3ESR),aAreaSizes_NIU3ESR,aDataVsArea_NIU3ESR, aAreas3_Err, aAreas3_Err, aDataVsArea_NIU3ESRErrLo, aDataVsArea_NIU3ESRErrHi)
 
 
 
@@ -268,7 +282,7 @@ grSimulation.SetMarkerSize(2.5)
 grSimulation.SetMarkerStyle(32)
 grSimulation.GetXaxis().SetTitle("Tile Area (cm^{2})")
 grSimulation.GetYaxis().SetTitle("MPV (PE)")
-grSimulation.GetYaxis().SetRangeUser(0, 1.5*grMax)
+grSimulation.GetYaxis().SetRangeUser(0, 1.7*grMax)
 grSimulation.GetXaxis().SetLabelSize(0)
 grSimulation.GetYaxis().SetTitleSize(.2*3/7)
 grSimulation.GetYaxis().SetLabelSize(.2*3/7)
@@ -288,21 +302,23 @@ for i in range(0,grSimulation_shifted.GetN()):
     grData_shifted.SetPoint(i, grData.GetX()[i] - shift, grData.GetY()[i])
 
 
-grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.5*grMax)
+grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.7*grMax)
 grSimulation_shifted.SetMarkerColor(r.kRed)
 grSimulation_shifted.SetLineColor(r.kRed)
 grSimulation_shifted.SetMarkerSize(2.5)
 grSimulation_shifted.SetMarkerStyle(32)
 grSimulation_shifted.GetXaxis().SetTitle("Tile Area (cm^{2})")
 grSimulation_shifted.GetYaxis().SetTitle("MPV (PE)")
-grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.5*grMax)
+grSimulation_shifted.GetYaxis().SetRangeUser(0, 1.7*grMax)
 grSimulation_shifted.GetXaxis().SetLabelSize(0)
 grSimulation_shifted.GetYaxis().SetTitleSize(.15*3/7)
 grSimulation_shifted.GetYaxis().SetLabelSize(.15*3/7)
 grSimulation_shifted.GetYaxis().SetTitleOffset(0.8)
 
-simFit = r.TF1("simFit","[0]*x^[1]",0,30)
-grSimulation_shifted.Fit("simFit")
+simFit = r.TF1("simFit","[0]*(x/9.)^[1]",0,30)
+simFit.SetLineColor(r.kBlack)
+grData_shifted.Fit("simFit")
+#grSimulation_shifted.Fit("simFit")
 
 #c = r.TCanvas("c","c")
 c = r.TCanvas("c","c",1000,1000)
@@ -336,7 +352,7 @@ oben.cd()
 grSimulation_shifted.Draw("AP")
 grData_shifted.Draw("P same")
 
-legend = r.TLegend(0.66,0.68,0.97,0.93)
+legend = r.TLegend(0.66,0.61,0.97,0.93)
 legend.SetFillStyle(0)
 legend.SetBorderSize(1)
 legend.SetTextSize(0.065)
@@ -344,30 +360,35 @@ legend.SetTextFont(42)
 
 legend.AddEntry(grSimulation, "Simulation", "PE")
 legend.AddEntry(grData, "Data", "PE")
-legend.AddEntry(simFit, "Fit", "L")
+legend.AddEntry(simFit, "Data Fit", "L")
+#legend.AddEntry(simFit, "Simulation Fit", "L")
 
 legend.Draw("same")
 
 fitInfo = r.TLatex()
 par0 = simFit.GetParameter(0)
 par1 = simFit.GetParameter(1)
+chi2 = simFit.GetChisquare()
+ndf  = simFit.GetNDF()
 
 print "par0: ", par0
 print "par1: ", par1
+print "chi2/ndf: ", chi2/ndf
 
 fitInfo.SetTextAlign(12)
 fitInfo.SetTextSize(0.06)
-fitInfo.DrawLatexNDC(0.32,0.86,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
+#fitInfo.DrawLatexNDC(0.32,0.86,"MPV = (%.2f)Area^{%.2f}"%(par0,par1))
 
 ### Ratio plot ###
 unten.cd()
 
-Ratio, RatioErr, Zero = getRatio(grData, grSimulation)
-aRatio    = array.array('d', Ratio)
-aRatioErr = array.array('d', RatioErr)
-aZero     = array.array('d', Zero)
+Ratio, RatioErrLo, RatioErrHi, Zero = getRatio(grData, grSimulation)
+aRatio      = array.array('d', Ratio)
+aRatioErrLo = array.array('d', RatioErrLo)
+aRatioErrHi = array.array('d', RatioErrHi)
+aZero       = array.array('d', Zero)
 
-grRatio = r.TGraphErrors(len(Ratio),grData.GetX(),aRatio,aZero,aRatioErr)
+grRatio = r.TGraphAsymmErrors(len(Ratio),grData.GetX(),aRatio,aZero, aZero ,aRatioErrLo, aRatioErrHi)
 MaxRatio = r.TMath.MaxElement(grRatio.GetN(),grRatio.GetY())
 MinRatio = max(2. - MaxRatio, 0.)
 
@@ -395,7 +416,7 @@ Ratio_allErr.SetMarkerSize(0)
 Ratio_allErr.SetFillStyle(3013)
 Ratio_allErr.SetFillColor(r.kRed)
 Ratio_allErr.SetLineColor(0)
-Ratio_allErr.Draw("E2same")
+#Ratio_allErr.Draw("E2same")
 
 
 c.SaveAs("Data_vs_Simulation_Area_" + Samples +".pdf")
