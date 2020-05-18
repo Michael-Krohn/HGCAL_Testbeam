@@ -37,24 +37,38 @@ aHoleSizes  = array.array('d', HoleSizes)
 aHoleSizes_Err = array.array('d', HoleSizes_Err)
 
 ### Simulation Results ###
-WhiteSilkScreenSim     = [85.4681, 68.8883, 60.4094]
-WhiteSilkScreenSim_Err = [0.134931, 0.124564, 0.112988]
+WhiteSilkScreenSim     = [34.3837, 31.845, 31.3288]
+#WhiteSilkScreenSim     = [67.6188, 63.7626, 62.2263]
+#WhiteSilkScreenSim     = [66.4617, 59.2, 54.279]
+WhiteSilkScreenSim_Err = [0.118413, 0.110998, 0.1073]
 #WhiteSilkScreenSim     = [98.35, 91.07, 81.5]
 #WhiteSilkScreenSim_Err = [11.97, 12.67, 14.84]
 
-BlackTapeSim     = [79.5178, 49.5763, 37.8405]
-BlackTapeSim_Err = [0.129322, 0.101558, 0.0889298]
+BlackTapeSim     = [33.7933, 28.3307, 26.8419]
+#BlackTapeSim     = [66.8773, 56.937, 51.1819]
+#BlackTapeSim     = [63.6708, 44.0544, 36.8592]
+BlackTapeSim_Err = [0.1114095, 0.0953604, 0.0810464]
 #BlackTapeSim     = [48.69, 24.98, 11.75]
 #BlackTapeSim_Err = [7.358, 5.03, 3.679]
+
+NoBackBoardSim     = [33.277, 21.7144]
+#NoBackBoardSim     = [33.277, 25.0815, 21.7144]
+#NoBackBoardSim     = [63.6831, 42.3028, 34.9325]
+NoBackBoardSim_Err = [0.118413, 0.1073]
+#NoBackBoardSim_Err = [0.118413, 0.110998, 0.1073]
+
 
 aWhiteSilkScreenSim     = array.array('d', WhiteSilkScreenSim)
 aWhiteSilkScreenSim_Err = array.array('d', WhiteSilkScreenSim_Err)
 aBlackTapeSim     = array.array('d', BlackTapeSim)
 aBlackTapeSim_Err = array.array('d', BlackTapeSim_Err)
+aNoBackBoardSim    = array.array('d', NoBackBoardSim)
+aNoBackBoardSim_Err = array.array('d', NoBackBoardSim_Err)
 
 ### Data Results ###
 ErrorHi = 0.071
 ErrorLo = 0.014
+#WhiteSilkScreen_1     = [34.69, 33.77, 34.01]
 WhiteSilkScreen_1     = [36.26, 34.05, 33.38]
 WhiteSilkScreenErrHi_1  = ErrorHi*np.array(WhiteSilkScreen_1)
 WhiteSilkScreenErrLo_1  = ErrorLo*np.array(WhiteSilkScreen_1)
@@ -63,6 +77,7 @@ aWhiteSilkScreen_1      = array.array('d', WhiteSilkScreen_1)
 aWhiteSilkScreenErrHi_1 = array.array('d', WhiteSilkScreenErrHi_1)
 aWhiteSilkScreenErrLo_1 = array.array('d', WhiteSilkScreenErrLo_1)
 
+#BlackTape_1     = [33.55, 30.76, 27.25]
 BlackTape_1     = [35.99, 30.56, 27.62]
 BlackTapeErrHi_1  = ErrorHi*np.array(BlackTape_1)
 BlackTapeErrLo_1  = ErrorLo*np.array(BlackTape_1)
@@ -84,9 +99,12 @@ aBlackTape_2    = array.array('d', BlackTape_2)
 aBlackTapeErrLo_2 = array.array('d', BlackTapeErrLo_2)
 aBlackTapeErrHi_2 = array.array('d', BlackTapeErrHi_2)
 
-JulyTestbeamSizes  = [1.8, 3.2, 7.4]
-JulyTestbeamMPV    = [35.5, 33.2, 23.8]
-aJulyTestbeamErr   = ErrorLo*np.array(JulyTestbeamMPV)
+JulyTestbeamSizes  = [3.3, 6.35]
+JulyTestbeamMPV    = [41.7, 32.0]
+#JulyTestbeamSizes  = [1.8, 3.2, 7.4]
+#JulyTestbeamMPV    = [35.5, 33.2, 23.8]
+aJulyTestbeamErrLo   = ErrorLo*np.array(JulyTestbeamMPV)
+aJulyTestbeamErrHi   = ErrorHi*np.array(JulyTestbeamMPV)
 
 aJulyTestbeamSizes = array.array('d', JulyTestbeamSizes)
 aJulyTestbeamMPV   = array.array('d', JulyTestbeamMPV)
@@ -121,6 +139,7 @@ if Samples == "1":
     normGraph.Fit("fit")
 
     NormWhite = fit.GetParameter(0)
+    #NormWhite = 0.548
     print "Norm: ", NormWhite
     for i in range(0, len(aWhiteSilkScreenSim)):
 	aWhiteSilkScreenSim[i] = aWhiteSilkScreenSim[i]*NormWhite
@@ -140,10 +159,28 @@ if Samples == "1":
     print "Norm: ", NormBlack
     print "Norm: ", NormWhite
     for i in range(0, len(aBlackTapeSim)):
-        aBlackTapeSim[i] = aBlackTapeSim[i]*NormWhite
-        aBlackTapeSim_Err[i] = aBlackTapeSim_Err[i]*NormWhite
-#        aBlackTapeSim[i] = aBlackTapeSim[i]*NormBlack
-#        aBlackTapeSim_Err[i] = aBlackTapeSim_Err[i]*NormBlack
+#        aBlackTapeSim[i] = aBlackTapeSim[i]*NormWhite
+#        aBlackTapeSim_Err[i] = aBlackTapeSim_Err[i]*NormWhite
+        aBlackTapeSim[i] = aBlackTapeSim[i]*NormBlack
+        aBlackTapeSim_Err[i] = aBlackTapeSim_Err[i]*NormBlack
+
+
+    normGraph = r.TH1F("normGraph","normGraph",len(aNoBackBoardSim), 0, 1)
+
+    for i in range(0, len(aNoBackBoardSim)):
+        normGraph.SetBinContent(i+1, aJulyTestbeamMPV[i]/aNoBackBoardSim[i])
+        Error = (aJulyTestbeamMPV[i]/aNoBackBoardSim[i])*math.sqrt((((aJulyTestbeamErrLo[i] + aJulyTestbeamErrHi[i])/2)/aJulyTestbeamMPV[i])**2 + (aNoBackBoardSim_Err[i]/aNoBackBoardSim[i])**2)
+        normGraph.SetBinError(i+1, Error)
+
+    fit = r.TF1("fit","[0]")
+    normGraph.Fit("fit")
+
+    NormNoBackBoard = fit.GetParameter(0)
+    print "NormNoBackBoard: ", NormNoBackBoard
+    for i in range(0, len(aNoBackBoardSim)):
+	aNoBackBoardSim[i] = aNoBackBoardSim[i]*NormNoBackBoard
+	aNoBackBoardSim_Err[i] = aNoBackBoardSim_Err[i]*NormNoBackBoard
+
 
 elif Samples == "2":
     normGraph = r.TH1F("normGraph","normGraph",len(aWhiteSilkScreen_2), 0, 1)
@@ -185,7 +222,9 @@ if Samples == "1":
     grData_White = r.TGraphAsymmErrors(len(aHoleSizes), aHoleSizes, aWhiteSilkScreen_1, aHoleSizes_Err, aHoleSizes_Err, aWhiteSilkScreenErrLo_1, aWhiteSilkScreenErrHi_1)
     grSimulation_Black = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aBlackTapeSim,aHoleSizes_Err,aBlackTapeSim_Err)
     grData_Black = r.TGraphAsymmErrors(len(aHoleSizes), aHoleSizes, aBlackTape_1, aHoleSizes_Err, aHoleSizes_Err, aBlackTapeErrLo_1, aBlackTapeErrHi_1)
-    grData_July  = r.TGraphErrors(len(aJulyTestbeamSizes), aJulyTestbeamSizes, aJulyTestbeamMPV, aHoleSizes_Err, aJulyTestbeamErr)
+    grData_July  = r.TGraphAsymmErrors(len(aJulyTestbeamSizes), aJulyTestbeamSizes, aJulyTestbeamMPV, aHoleSizes_Err, aHoleSizes_Err, aJulyTestbeamErrLo, aJulyTestbeamErrHi)
+    grSimulation_NoBackBoard = r.TGraphErrors(len(aJulyTestbeamSizes),aJulyTestbeamSizes,aNoBackBoardSim,aHoleSizes_Err,aNoBackBoardSim_Err)
+
 
 elif Samples == "2":
     grSimulation_White = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aWhiteSilkScreenSim,aHoleSizes_Err,aWhiteSilkScreenSim_Err)
@@ -193,7 +232,7 @@ elif Samples == "2":
     grData_White = r.TGraphAsymmErrors(len(aHoleSizes), aHoleSizes, aWhiteSilkScreen_2, aHoleSizes_Err, aHoleSizes_Err, aWhiteSilkScreenErrLo_2, aWhiteSilkScreenErrHi_2)
     grSimulation_Black = r.TGraphErrors(len(aHoleSizes),aHoleSizes,aBlackTapeSim,aHoleSizes_Err,aBlackTapeSim_Err)
     grData_Black = r.TGraphAsymmErrors(len(aHoleSizes), aHoleSizes, aBlackTape_2, aHoleSizes_Err, aHoleSizes_Err, aBlackTapeErrLo_1, aBlackTapeErrHi_1)
-    grData_July  = r.TGraph(len(aJulyTestbeamSizes), aJulyTestbeamSizes, aJulyTestbeamMPV, aHoleSizes_Err, aJulyTestbeamErr)
+    grData_July  = r.TGraphAsymmerrors(len(aJulyTestbeamSizes), aJulyTestbeamSizes, aJulyTestbeamMPV, aHoleSizes_Err, aHoleSizes_Err, aJulyTestbeamErrLo, aJulyTestbeamErrHi)
 
 
 
@@ -224,18 +263,22 @@ grData_Black.SetMarkerStyle(8)
 grData_Black.SetTitle("")
 grData_Black.GetXaxis().SetTitle("Hole Diameter (mm)")
 grData_Black.GetYaxis().SetTitle("MPV (PE)")
-grData_Black.GetYaxis().SetRangeUser(10., 1.2*grMax)
-
+grData_Black.GetYaxis().SetRangeUser(25., 1.4*grMax)
+grData_Black.GetYaxis().SetTitleOffset(0.8)
 
 grData_July.SetTitle("")
 grData_July.GetXaxis().SetTitle("Hole Diameter (mm)")
 grData_July.GetYaxis().SetTitle("MPV (PE)")
 grData_July.GetYaxis().SetRangeUser(20., 1.3*grMax)
-grData_July.SetMarkerColor(r.kViolet)
-grData_July.SetLineColor(r.kViolet)
+grData_July.SetMarkerColor(r.kGreen)
+grData_July.SetLineColor(r.kGreen)
 grData_July.SetMarkerSize(2.5)
 grData_July.SetMarkerStyle(8)
 
+grSimulation_NoBackBoard.SetMarkerColor(r.kGreen)
+grSimulation_NoBackBoard.SetLineColor(r.kGreen)
+grSimulation_NoBackBoard.SetMarkerSize(2.5)
+grSimulation_NoBackBoard.SetMarkerStyle(32)
 
 c = r.TCanvas("c","c",1000,800)
 c.SetFillColor(0)
@@ -259,28 +302,30 @@ grData_Black.Draw("AP")
 grData_White.Draw("P same")
 grSimulation_White.Draw("P same")
 grSimulation_Black.Draw("P same")
-#grData_July.Draw("P same")
+grData_July.Draw("P same")
+grSimulation_NoBackBoard.Draw("P same")
 
 CMS_lumi.CMS_lumi(c, iPeriod, iPos)
 
-legend = r.TLegend(0.55,0.8,0.98,0.95)
+legend = r.TLegend(0.55,0.75,0.98,0.95)
 legend.SetFillStyle(0)
 legend.SetBorderSize(0)
-legend.SetTextSize(0.045)
+legend.SetTextSize(0.04)
 legend.SetTextFont(42)
 
-legend2 = r.TLegend(0.16,0.8,0.55,0.95)
+legend2 = r.TLegend(0.16,0.75,0.52,0.95)
 legend2.SetFillStyle(0)
 legend2.SetBorderSize(0)
-legend2.SetTextSize(0.045)
+legend2.SetTextSize(0.04)
 legend2.SetTextFont(42)
 
 
-legend2.AddEntry(grSimulation_White, "Simulation White Silkscreen", "PE")
-legend2.AddEntry(grData_White, "Data White Silkscreen", "PE")
+legend2.AddEntry(grSimulation_White, "Simulation WSS", "PE")
+legend2.AddEntry(grData_White, "Data WSS", "PE")
 legend.AddEntry(grSimulation_Black, "Simulation Black Tape", "PE")
 legend.AddEntry(grData_Black, "Data Black Tape", "PE")
-#legend.AddEntry(grData_July, "Data No SiPM Board", "PE")
+legend.AddEntry(grData_July, "Data No Back-plane", "PE")
+legend2.AddEntry(grSimulation_NoBackBoard, "Sim No Back-plane", "PE")
 
 legend.Draw("same")
 legend2.Draw("same")
